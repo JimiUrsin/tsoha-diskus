@@ -38,8 +38,8 @@ def createthread():
     title = request.form["title"]
     forum_id = request.form["forum_id"]
     if title is not None:
-        sql = "INSERT INTO threads(forum_id, created_by, title, created_at) VALUES (:id, 1, :title, NOW())"
-        db.session.execute(sql, {"id":forum_id, "title":title})
+        sql = "INSERT INTO threads(forum_id, created_by, title, created_at) VALUES (:id, :user, :title, NOW())"
+        db.session.execute(sql, {"id":forum_id, "user":session["id"], "title":title})
         db.session.commit()
     return redirect(f"/forums/{forum_id}")
 
@@ -85,7 +85,11 @@ def registerp():
         sql = "INSERT INTO users (administrator, username, pwhash) VALUES ('false', :name, :pw);"
         db.session.execute(sql, {"name":username, "pw":generate_password_hash(password)})
         db.session.commit()
+        sql = "SELECT id FROM users WHERE username=:username;"
+        user = db.session.execute(sql, {"username":username}).fetchone()
         session["username"] = username
+        session["admin"] = False
+        session["id"] = user[0]
     return redirect("/")
 
 @app.route("/login")
@@ -95,7 +99,7 @@ def login():
 @app.route("/login", methods=["POST"])
 def loginp():
     username = request.form["username"]
-    sql = "SELECT pwhash FROM users WHERE users.username=:name"
+    sql = "SELECT id, administrator, pwhash FROM users WHERE users.username=:name"
     result = db.session.execute(sql, {"name":username})
     user = result.fetchone()
     if user is None:
@@ -104,8 +108,10 @@ def loginp():
     else:
         print("Väärä salasana")
         password = request.form["password"]
-        if check_password_hash(user[0], password):
+        if check_password_hash(user[2], password):
             session["username"] = username
+            session["admin"] = user[1]
+            session["id"] = user[0]
         else:
             return redirect("/login")
     return redirect("/")
@@ -113,5 +119,7 @@ def loginp():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["admin"]
+    del session["id"]
     return redirect("/")
         
