@@ -1,4 +1,5 @@
 <a href="/"><b>← Etusivulle</b></a></br>
+
 {% for message in get_flashed_messages() %}
 <font color=red> <b>{{message}}</b></font>
 {% endfor %}
@@ -8,7 +9,7 @@
     <input type="text" name="username"> </br>
 
     Salasana: </br>
-    <input type="text" name="password"> </br>
+    <input type="text" name="password"> </br></br>
 
     <input type="submit" value="Kirjaudu sisään">
 </form>

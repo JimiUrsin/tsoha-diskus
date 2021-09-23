@@ -8,16 +8,20 @@
 <hr>
 <b>Otsikko: {{thread.title}}</b> </br>
 <b>Luonut: {{thread.username}}</b>
+{% if session.username == thread.username or session.admin%}
 <form action="/deletethread" method="POST">
     <input type="submit" value="Poista lanka">
     <input type="hidden" name="thread_id" value="{{thread.id}}">
     <input type="hidden" name="forum_id" value="{{forum.id}}">
 </form>
 <hr>
+{% endif %}
 {% endfor %}
-
+</br>
+{% if session.username %}
 <form action="/createthread" method="POST">
     <input type="text" name="title">
     <input type="submit" value="Tee uusi lanka">
     <input type="hidden" name="forum_id" value="{{forum.id}}">    
 </form>
+{% endif %}

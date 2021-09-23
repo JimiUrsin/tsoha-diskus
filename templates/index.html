@@ -12,19 +12,23 @@
 {% for forum in forums %}
 <h4>
 <a href="/forums/{{forum.id}}">{{forum.topic}}</a>
+{% if session.admin %}
 <form action="/deleteforum" method="POST">
     <input type="submit" value="Poista aihe">
     <input type="hidden" name="forum_id" value="{{forum.id}}">
 </form>
+{% endif %}
 </h4>
 {% endfor %}
 
+{% if session.admin %}
 <form action="/createforum" method="POST">
     <input type="text" name="topic">
     <input type="submit" value="Tee uusi aihe"> 
 </form>
+{% endif %}
 
-</br></br>
 {% if session.username %}
+    </br></br>
     <a href="/logout"> Kirjaudu ulos</a>
 {% endif %}
