@@ -90,6 +90,9 @@ def registerp():
         session["username"] = username
         session["admin"] = False
         session["id"] = user[0]
+    else:
+        flash("Käyttäjätunnus on jo olemassa")
+        return redirect("/register")
     return redirect("/")
 
 @app.route("/login")
@@ -103,10 +106,10 @@ def loginp():
     result = db.session.execute(sql, {"name":username})
     user = result.fetchone()
     if user is None:
-        print("Väärä käyttäjänimi")
+        flash("Väärä käyttäjänimi")
         return redirect("/login")
     else:
-        print("Väärä salasana")
+        flash("Väärä salasana")
         password = request.form["password"]
         if check_password_hash(user[2], password):
             session["username"] = username
