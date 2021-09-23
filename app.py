@@ -48,7 +48,7 @@ def deletethread():
     thread_id = request.form["thread_id"]
     forum_id = request.form["forum_id"]
 
-    sql = "DELETE FROM threads WHERE threads.id=:thread_id AND threads.created_by=user_id;"
+    sql = "DELETE FROM threads WHERE threads.id=:thread_id AND threads.created_by=:user_id;"
     db.session.execute(sql, {"thread_id":thread_id, "user_id":session["id"]})
     db.session.commit()
     return redirect(f"/forums/{forum_id}")
