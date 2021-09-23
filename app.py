@@ -48,27 +48,29 @@ def deletethread():
     thread_id = request.form["thread_id"]
     forum_id = request.form["forum_id"]
 
-    sql = "DELETE FROM threads WHERE threads.id=:id"
-    db.session.execute(sql, {"id":thread_id})
+    sql = "DELETE FROM threads WHERE threads.id=:thread_id AND threads.created_by=user_id;"
+    db.session.execute(sql, {"thread_id":thread_id, "user_id":session["id"]})
     db.session.commit()
     return redirect(f"/forums/{forum_id}")
 
 
 @app.route("/createforum", methods=["POST"])
 def createforum():
-    topic = request.form["topic"]
-    if topic is not None:
-        sql = "INSERT INTO forums (hide, topic) VALUES ('FALSE', :topic);"
-        db.session.execute(sql, {"topic":topic})
-        db.session.commit()
+    if session["admin"]:
+        topic = request.form["topic"]
+        if topic is not None:
+            sql = "INSERT INTO forums (hide, topic) VALUES ('FALSE', :topic);"
+            db.session.execute(sql, {"topic":topic})
+            db.session.commit()
     return redirect("/")
 
 @app.route("/deleteforum", methods=["POST"])
 def deleteforum():
-    forum_id = request.form["forum_id"]
-    sql = "DELETE FROM forums WHERE forums.id=:id"
-    db.session.execute(sql, {"id":forum_id})
-    db.session.commit()
+    if session["admin"]:
+        forum_id = request.form["forum_id"]
+        sql = "DELETE FROM forums WHERE forums.id=:id"
+        db.session.execute(sql, {"id":forum_id})
+        db.session.commit()
     return redirect("/")
 
 @app.route("/register")
@@ -125,4 +127,21 @@ def logout():
     del session["admin"]
     del session["id"]
     return redirect("/")
-        
+
+@app.route("/promote/")
+def promote():
+    if session["id"]:        
+        sql = "UPDATE users SET administrator='1' WHERE id=:id;"
+        db.session.execute(sql, {"id":session["id"]})
+        db.session.commit()
+        session["admin"] = True
+    return redirect("/")
+
+@app.route("/demote/")
+def demote():
+    if session["id"]:  
+        sql = "UPDATE users SET administrator='0' WHERE id=:id;"
+        db.session.execute(sql, {"id":session["id"]})
+        db.session.commit()
+        session["admin"] = False
+    return redirect("/")

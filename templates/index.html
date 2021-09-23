@@ -31,4 +31,11 @@
 {% if session.username %}
     </br></br>
     <a href="/logout"> Kirjaudu ulos</a>
+
+    </br>
+    {% if session.admin %}
+        <a href="/demote/">Muuta itsesi käyttäjäksi</a>
+    {% else %}
+        <a href="/promote/">Muuta itsesi ylläpitäjäksi</a>
+    {% endif %}
 {% endif %}
