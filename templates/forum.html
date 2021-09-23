@@ -3,10 +3,9 @@
 <a href="/"><b>← Etusivulle</b></a>
 
 <h1>{{forum.topic}}</h1>
-
-{% for thread in threads %}
 <hr>
-<b>Otsikko: {{thread.title}}</b> </br>
+{% for thread in threads %}
+<b><a href="/thread/{{thread.id}}">{{thread.title}}</a></b> </br>
 <b>Luonut: {{thread.username}}</b>
 {% if session.username == thread.username or session.admin%}
 <form action="/deletethread" method="POST">

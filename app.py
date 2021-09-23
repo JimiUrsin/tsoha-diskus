@@ -145,3 +145,36 @@ def demote():
         db.session.commit()
         session["admin"] = False
     return redirect("/")
+
+@app.route("/thread/<int:id>")
+def thread(id):
+    messages_sql = "SELECT messages.*, users.username FROM messages LEFT JOIN users ON messages.user_id=users.id WHERE thread_id=:id;"
+    messages = db.session.execute(messages_sql, {"id":id}).fetchall()
+    
+    thread_sql = "SELECT * FROM threads WHERE id=:id;"
+    thread = db.session.execute(thread_sql, {"id": id}).fetchone()
+    if thread is None:
+        return redirect("/")
+
+    return render_template("thread.html", messages=messages, thread=thread)
+
+@app.route("/createmessage", methods=["POST"])
+def createmessage():
+    if not session["username"]:
+        return redirect("/")
+    text = request.form["content"]
+    thread_id = request.form["thread_id"]
+    sql = "INSERT INTO messages (thread_id, user_id, content, sent_at) VALUES (:thread_id, :user_id, :content, NOW());"
+    db.session.execute(sql, {"thread_id":thread_id, "user_id":session["id"], "content":text})
+    db.session.commit()
+    return redirect(f"/thread/{thread_id}")
+
+@app.route("/deletemessage", methods=["POST"])
+def deletemessage():
+    message_id = request.form["message_id"]
+    thread_id = request.form["thread_id"]
+
+    sql = "DELETE FROM messages WHERE id=:message_id;"
+    db.session.execute(sql, {"message_id":message_id})
+    db.session.commit()
+    return redirect(f"/thread/{thread_id}")
