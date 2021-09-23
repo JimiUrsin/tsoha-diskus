@@ -1,0 +1,21 @@
+<title>Diskus</title>
+{% if session.username %}
+<h1>Tervetuloa, {{session.username}}!</h1>
+<a href="/logout"> Kirjaudu ulos</a>
+{% else %}
+<h1>Tervetuloa!</h1>
+<a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a>
+{% endif %}
+{% for forum in forums %}
+<a href="/forums/{{forum.id}}"><h2>{{forum.topic}}</h2></a>
+
+<form action="/deleteforum" method="POST">
+    <input type="submit" value="Poista aihe">
+    <input type="hidden" name="forum_id" value="{{forum.id}}">
+</form>
+{% endfor %}
+
+<form action="/createforum" method="POST">
+    <input type="text" name="topic">
+    <input type="submit" value="Tee uusi aihe"> 
+</form>
