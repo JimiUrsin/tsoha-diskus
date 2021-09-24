@@ -23,3 +23,4 @@ Projektin keskeiset toiminnot, eli kirjautuminen sekä aiheiden, lankojen sekä 
 
 ### Tiedetyt ongelmat
 - Kirjautumisen/rekisteröitymisen ilmoitukset saattavat näkyä väärässä paikassa/väärälle käyttäjälle
+- Piilotetut alueet ja niiden langat eivät tarkista onko käyttäjällä oikeus katsoa niitä
