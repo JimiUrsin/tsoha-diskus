@@ -10,6 +10,7 @@
 <h3>Aiheet</h3>
 
 {% for forum in forums %}
+{% if not forum.hide or session.admin %}
 <h4>
 <a href="/forums/{{forum.id}}">{{forum.topic}}</a>
 {% if session.admin %}
@@ -19,12 +20,15 @@
 </form>
 {% endif %}
 </h4>
+{% endif %}
 {% endfor %}
 
 {% if session.admin %}
 <form action="/createforum" method="POST">
-    <input type="text" name="topic">
-    <input type="submit" value="Tee uusi aihe"> 
+    <input type="text" name="topic" placeholder="Aihe">
+    <input type="checkbox" id="hidden" name="hidden">
+    <label for="hidden">Piilotettu</label> <br>
+    <input type="submit" value="Tee uusi aihe">
 </form>
 {% endif %}
 

@@ -64,8 +64,9 @@ def createforum():
     if session["admin"]:
         topic = request.form["topic"]
         if topic.strip():
-            sql = "INSERT INTO forums (hide, topic) VALUES ('FALSE', :topic);"
-            db.session.execute(sql, {"topic":topic})
+            hidden = request.form["hidden"]
+            sql = "INSERT INTO forums (hide, topic) VALUES (:hide, :topic);"
+            db.session.execute(sql, {"hide":hidden, "topic":topic})
             db.session.commit()
     return redirect("/")
 
