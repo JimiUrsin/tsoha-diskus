@@ -8,6 +8,7 @@ Sovellusta pääsee kokeilemaan siirtymällä Herokuun https://tsoha-diskus.hero
 Projektin keskeiset toiminnot, eli kirjautuminen sekä aiheiden, lankojen sekä viestien luominen ja poistaminen ovat toimintakunnossa. Ominaisuuslistasta voi nähdä, että sovellus on hyvällä mallilla, ja loput osat eivät ole onneksi kovin vaativia.
 
 ### Sovelluksen ominaisuuksia
+- ✅ Itsensä voi tällä hetkellä (testaamista varten) muuttaa itsensä ylläpitäjäksi tai takaisin käyttäjäksi
 - ✅ Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
 - ✅ Käyttäjä näkee sovelluksen etusivulla listan alueista
 - ❌ Käyttäjä näkee jokaisen alueen ketjujen ja viestien määrän
@@ -19,3 +20,7 @@ Projektin keskeiset toiminnot, eli kirjautuminen sekä aiheiden, lankojen sekä 
 - ❌ Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 - ✅ Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 - ❌ Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
+
+### Tiedetyt ongelmat
+- Kirjautumisen/rekisteröitymisen ilmoitukset saattavat näkyä väärässä paikassa/väärälle käyttäjälle
+- Aihe, lanka ja viesti voi olla tyhjä
