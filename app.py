@@ -42,7 +42,7 @@ def forum(id):
 def createthread():
     title = request.form["title"]
     forum_id = request.form["forum_id"]
-    if title is not None:
+    if title.strip():
         sql = "INSERT INTO threads(forum_id, created_by, title, created_at) VALUES (:id, :user, :title, NOW())"
         db.session.execute(sql, {"id":forum_id, "user":session["id"], "title":title})
         db.session.commit()
@@ -63,7 +63,7 @@ def deletethread():
 def createforum():
     if session["admin"]:
         topic = request.form["topic"]
-        if topic is not None:
+        if topic.strip():
             sql = "INSERT INTO forums (hide, topic) VALUES ('FALSE', :topic);"
             db.session.execute(sql, {"topic":topic})
             db.session.commit()
@@ -169,9 +169,10 @@ def createmessage():
         return redirect("/")
     text = request.form["content"]
     thread_id = request.form["thread_id"]
-    sql = "INSERT INTO messages (thread_id, user_id, content, sent_at) VALUES (:thread_id, :user_id, :content, NOW());"
-    db.session.execute(sql, {"thread_id":thread_id, "user_id":session["id"], "content":text})
-    db.session.commit()
+    if text.strip():
+        sql = "INSERT INTO messages (thread_id, user_id, content, sent_at) VALUES (:thread_id, :user_id, :content, NOW());"
+        db.session.execute(sql, {"thread_id":thread_id, "user_id":session["id"], "content":text})
+        db.session.commit()
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/deletemessage", methods=["POST"])
