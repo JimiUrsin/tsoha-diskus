@@ -1,4 +1,5 @@
 from app import db
+from counter import increment
 
 def create_forum(topic, hidden):
     if topic.strip():
@@ -21,5 +22,8 @@ def create_message(text, thread_id, user_id):
         sql = "INSERT INTO messages (thread_id, user_id, content, sent_at) VALUES (:thread_id, :user_id, :content, NOW());"
         db.session.execute(sql, {"thread_id":thread_id, "user_id":user_id, "content":text})
         db.session.commit()
+
+        increment(thread_id)
+
         return True
     return False

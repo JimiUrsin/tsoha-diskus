@@ -6,7 +6,8 @@
 <hr>
 {% for thread in threads %}
 <b><a href="/thread/{{thread.id}}">{{thread.title}}</a></b> </br>
-<b>Luonut: {{thread.username}}</b>
+<b>Luonut: {{thread.username}}</b> <br>
+Viestejä langassa: {{thread.msgcount}}.
 {% if session.username == thread.username or session.admin%}
 <form action="/deletethread" method="POST">
     <input type="submit" value="Poista lanka">

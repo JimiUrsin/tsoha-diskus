@@ -8,11 +8,12 @@
 {% endif %}
 
 <h3>Aiheet</h3>
-
+<hr>
 {% for forum in forums %}
 {% if not forum.hide or session.admin %}
 <h4>
-<a href="/forums/{{forum.id}}">{{forum.topic}}</a>
+<a href="/forums/{{forum.id}}">{{forum.topic}}</a><br>
+Viestejä aiheessa: {{forum.msgcount}}.
 {% if session.admin %}
 <form action="/deleteforum" method="POST">
     <input type="submit" value="Poista aihe">
@@ -21,6 +22,7 @@
 {% endif %}
 </h4>
 {% endif %}
+<hr>
 {% endfor %}
 
 {% if session.admin %}

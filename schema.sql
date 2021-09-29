@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS forums (
 	id SERIAL PRIMARY KEY,
 	hide BOOLEAN,
-	topic TEXT
+	topic TEXT,
+	msgcount INTEGER DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS threads (
@@ -16,7 +17,8 @@ CREATE TABLE IF NOT EXISTS threads (
 	forum_id INTEGER REFERENCES forums ON DELETE CASCADE,
 	created_by INTEGER REFERENCES users,
 	title TEXT,
-	created_at TIMESTAMP
+	created_at TIMESTAMP,
+	msgcount INTEGER DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS messages (

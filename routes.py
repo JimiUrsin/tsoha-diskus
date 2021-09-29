@@ -38,7 +38,7 @@ def deletethread():
     thread_id = request.form["thread_id"]
     forum_id = request.form["forum_id"]
 
-    delete.thread(thread_id, session["admin"], session["id"])
+    delete.thread(forum_id, thread_id, session["admin"], session["id"])
 
     return redirect(f"/forums/{forum_id}")
 
@@ -76,9 +76,10 @@ def register():
     else:
         user.register(username, password)
 
+        account = user.get_user(username)
         session["username"] = username
         session["admin"] = False
-        session["id"] = user[0]
+        session["id"] = account[0]
         return redirect("/")
     
 
@@ -126,13 +127,14 @@ def demote():
     return redirect("/")
 
 @app.route("/thread/<int:id>")
-def thread(id):    
-    messages = get.messages(id)
+def thread(id):
     thread = get.thread(id)
     
-    if thread is None:
+    if thread is None:        
         return redirect("/")
 
+    print("Thread message count is ", get.thread_message_count(id))
+    messages = get.messages(id)
     return render_template("thread.html", messages=messages, thread=thread)
 
 @app.route("/createmessage", methods=["POST"])
@@ -149,7 +151,7 @@ def deletemessage():
     message_id = request.form["message_id"]
     thread_id = request.form["thread_id"]
 
-    delete.message(message_id, session["admin"], session["id"])
+    delete.message(message_id, session["admin"], session["id"], thread_id)
 
     return redirect(f"/thread/{thread_id}")
 
