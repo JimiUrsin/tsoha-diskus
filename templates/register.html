@@ -1,7 +1,7 @@
 <a href="/"><b>← Etusivulle</b></a></br>
 
 {% for message in get_flashed_messages() %}
-<font color=red> <b>{{message}}</b></font>
+<strong style="color:red">{{message}}</strong>
 {% endfor %}
 
 <form action="/register" method="POST">
