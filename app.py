@@ -126,7 +126,7 @@ def loginp():
             session["username"] = username
             session["admin"] = user[1]
             session["id"] = user[0]
-        else:            
+        else:
             flash("Väärä salasana")
             return redirect("/login")
     return redirect("/")
@@ -158,7 +158,8 @@ def demote():
 
 @app.route("/thread/<int:id>")
 def thread(id):
-    messages_sql = "SELECT messages.*, users.username FROM messages LEFT JOIN users ON messages.user_id=users.id WHERE thread_id=:id;"
+    messages_sql = "SELECT messages.*, users.username FROM messages " \
+    "LEFT JOIN users ON messages.user_id=users.id WHERE thread_id=:id;"
     messages = db.session.execute(messages_sql, {"id":id}).fetchall()
     
     thread_sql = "SELECT * FROM threads WHERE id=:id;"
@@ -185,7 +186,10 @@ def deletemessage():
     message_id = request.form["message_id"]
     thread_id = request.form["thread_id"]
 
-    sql = "DELETE FROM messages WHERE id=:message_id;"
-    db.session.execute(sql, {"message_id":message_id})
+    if session["admin"]:
+        sql = "DELETE FROM messages WHERE id=:message_id"
+    else:
+        sql = "DELETE FROM messages WHERE id=:message_id AND messages.user_id=:user_id;"
+    db.session.execute(sql, {"message_id":message_id, "user_id":session["id"]})
     db.session.commit()
     return redirect(f"/thread/{thread_id}")
