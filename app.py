@@ -121,13 +121,13 @@ def loginp():
         flash("Väärä käyttäjänimi")
         return redirect("/login")
     else:
-        flash("Väärä salasana")
         password = request.form["password"]
         if check_password_hash(user[2], password):
             session["username"] = username
             session["admin"] = user[1]
             session["id"] = user[0]
-        else:
+        else:            
+            flash("Väärä salasana")
             return redirect("/login")
     return redirect("/")
 

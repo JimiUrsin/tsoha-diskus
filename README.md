@@ -22,5 +22,4 @@ Projektin keskeiset toiminnot, eli kirjautuminen sekä aiheiden, lankojen sekä 
 - ❌ Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
 
 ### Tiedetyt ongelmat
-- Kirjautumisen/rekisteröitymisen ilmoitukset saattavat näkyä väärässä paikassa/väärälle käyttäjälle
 - Piilotetut alueet ja niiden langat eivät tarkista onko käyttäjällä oikeus katsoa niitä
