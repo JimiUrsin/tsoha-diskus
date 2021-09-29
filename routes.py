@@ -133,7 +133,6 @@ def thread(id):
     if thread is None:        
         return redirect("/")
 
-    print("Thread message count is ", get.thread_message_count(id))
     messages = get.messages(id)
     return render_template("thread.html", messages=messages, thread=thread)
 
