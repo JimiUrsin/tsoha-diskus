@@ -1,5 +1,5 @@
 from app import db
-import counter
+from counter import decrement, decrement_tc, sub
 
 def forum(forum_id):
     sql = "DELETE FROM forums WHERE forums.id=:id"
@@ -20,7 +20,8 @@ def thread(forum_id, thread_id, admin, user_id):
     db.session.execute(sql, params)
     db.session.commit()
 
-    counter.sub(forum_id, count)    
+    sub(forum_id, count)
+    decrement_tc(forum_id)
 
 def message(message_id, admin, user_id, thread_id):
     if admin:
@@ -33,4 +34,4 @@ def message(message_id, admin, user_id, thread_id):
     db.session.execute(sql, params)
     db.session.commit()
 
-    counter.decrement(thread_id)
+    decrement(thread_id)

@@ -1,7 +1,9 @@
 <title>Diskus - {{thread.title}}</title>
 
-<a href="/forums/{{thread.forum_id}}"><b>← Takaisin aiheeseen</b></a>
-
+<a href="/forums/{{thread.forum_id}}"><b>← Takaisin aiheeseen</b></a><br>
+{% for message in get_flashed_messages() %}
+<strong style="color:red">{{message}}</strong>
+{% endfor %}
 <h1>{{thread.title}}</h1>
 <hr>
 {% for message in messages %}

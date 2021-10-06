@@ -7,13 +7,18 @@
     <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a>
 {% endif %}
 
+{% for message in get_flashed_messages() %}
+<strong style="color:red">{{message}}</strong>
+{% endfor %}
+
 <h3>Aiheet</h3>
-<hr>
 {% for forum in forums %}
 {% if not forum.hide or session.admin %}
+<hr>
 <h4>
 <a href="/forums/{{forum.id}}">{{forum.topic}}</a><br>
-Viestejä aiheessa: {{forum.msgcount}}.
+Lankoja aiheessa: {{forum.threadcount}}<br>
+Viestejä aiheessa: {{forum.msgcount}}
 {% if session.admin %}
 <form action="/deleteforum" method="POST">
     <input type="submit" value="Poista aihe">
@@ -22,8 +27,8 @@ Viestejä aiheessa: {{forum.msgcount}}.
 {% endif %}
 </h4>
 {% endif %}
-<hr>
 {% endfor %}
+<hr>
 
 {% if session.admin %}
 <form action="/createforum" method="POST">

@@ -18,6 +18,8 @@ def forum(id):
     if exists:
         threads = get.get_threads(id)
         forum = get.forum(id)
+        if forum[1] and not session["admin"]:
+            return redirect("/")
         return render_template("forum.html", forum=forum, threads=threads)
     else:
         return redirect("/")
@@ -29,7 +31,11 @@ def createthread():
         title = request.form["title"]
         forum_id = request.form["forum_id"]
 
-        create.create_thread(title, forum_id, session["id"])
+        if len(title) > 50:
+            return error("Langan otsikko ei saa olla yli 50 merkkiä pitkä", "/")
+
+        if not create.create_thread(title, forum_id, session["id"]):
+            flash("Langan otsikko ei voi olla tyhjä.") 
 
     return redirect(f"/forums/{forum_id}")
 
@@ -48,8 +54,13 @@ def createforum():
     if session["admin"]:
         topic = request.form["topic"]
         hidden = request.form.get("hidden")
+        
+        if len(topic) > 500:
+            return error("Aihe ei saa olla yli 50 merkkiä pitkä", "/")
 
-        create.create_forum(topic, bool(hidden))
+        if not create.create_forum(topic, bool(hidden)):
+            flash("Aiheen nimi ei voi olla tyhjä.")       
+
     return redirect("/")
 
 @app.route("/deleteforum", methods=["POST"])
@@ -130,7 +141,12 @@ def demote():
 def thread(id):
     thread = get.thread(id)
     
-    if thread is None:        
+    if thread is None:
+        return redirect("/")
+    
+    parent_id = get.parent(id)
+    forum = get.forum(parent_id)
+    if forum[1] and not session["admin"]:              
         return redirect("/")
 
     messages = get.messages(id)
@@ -141,8 +157,11 @@ def createmessage():
     if not session["username"]:
         return redirect("/")
     text = request.form["content"]
-    thread_id = request.form["thread_id"]
-    create.create_message(text, thread_id, session["id"])
+    thread_id = request.form["thread_id"]    
+    if len(text) > 500:
+        return error("Viesti ei saa olla yli 500 merkkiä pitkä", f"/thread/{thread_id}")
+    if not create.create_message(text, thread_id, session["id"]):        
+        flash("Viesti ei voi olla tyhjä.")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/deletemessage", methods=["POST"])

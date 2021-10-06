@@ -1,7 +1,10 @@
+
 <title>Diskus - {{forum.topic}}</title>
 
-<a href="/"><b>← Etusivulle</b></a>
-
+<a href="/"><b>← Etusivulle</b></a><br>
+{% for message in get_flashed_messages() %}
+<br><strong style="color:red">{{message}}</strong>
+{% endfor %}
 <h1>{{forum.topic}}</h1>
 <hr>
 {% for thread in threads %}
@@ -14,8 +17,8 @@ Viestejä langassa: {{thread.msgcount}}.
     <input type="hidden" name="thread_id" value="{{thread.id}}">
     <input type="hidden" name="forum_id" value="{{forum.id}}">
 </form>
-<hr>
 {% endif %}
+<hr>
 {% endfor %}
 </br>
 {% if session.username %}

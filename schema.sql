@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS forums (
 	id SERIAL PRIMARY KEY,
 	hide BOOLEAN,
 	topic TEXT,
-	msgcount INTEGER DEFAULT 0
+	msgcount INTEGER DEFAULT 0,
+	threadcount INTEGER DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS threads (

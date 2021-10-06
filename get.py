@@ -6,7 +6,7 @@ def forum_exists(forum_id):
     return result.fetchone() is not None
 
 def get_forums():
-    sql = f"SELECT forums.* FROM forums;"
+    sql = "SELECT forums.* FROM forums;"
     result = db.session.execute(sql)
     forums = result.fetchall()
     return forums
