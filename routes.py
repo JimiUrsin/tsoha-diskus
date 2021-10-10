@@ -132,15 +132,17 @@ def logout():
 
 @app.route("/promote/")
 def promote():
-    if session.get("id"):
-        user.promote(session["id"])
+    user_id = session.get("id")
+    if user_id:
+        user.promote(user_id)
         session["admin"] = True
     return redirect("/")
 
 @app.route("/demote/")
 def demote():
-    if session.get("id"):
-        user.demote(session["id"])
+    user_id = session.get("id")
+    if user_id:
+        user.demote(user_id)
         session["admin"] = False
     return redirect("/")
 

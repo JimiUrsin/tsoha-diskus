@@ -7,9 +7,6 @@
     <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a>
 {% endif %}
 
-{% for message in get_flashed_messages() %}
-<strong style="color:red">{{message}}</strong>
-{% endfor %}
 <a href="/search" style="right:0; position:absolute">Hae viestejä</a>
 <h3>Aiheet</h3>
 {% for forum in forums %}
@@ -41,6 +38,9 @@
     <input type="submit" value="Tee uusi aihe">
 </form>
 {% endif %}
+{% for message in get_flashed_messages() %}
+<strong style="color:red">{{message}}</strong>
+{% endfor %}
 
 {% if session.username %}
     </br></br>

@@ -2,9 +2,6 @@
 <title>Diskus - {{forum.topic}}</title>
 
 <a href="/"><b>← Etusivulle</b></a><br>
-{% for message in get_flashed_messages() %}
-<br><strong style="color:red">{{message}}</strong>
-{% endfor %}
 <h1>{{forum.topic}}</h1>
 <hr>
 {% for thread in threads %}
@@ -31,3 +28,6 @@
     <input type="hidden" name="forum_id" value="{{forum.id}}">    
 </form>
 {% endif %}
+{% for message in get_flashed_messages() %}
+<strong style="color:red">{{message}}</strong>
+{% endfor %}
