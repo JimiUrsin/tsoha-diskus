@@ -18,7 +18,7 @@ def forum(id):
     if exists:
         threads = get.get_threads(id)
         forum = get.forum(id)
-        if forum[1] and not session["admin"]:
+        if forum[1] and not session.get("admin"):
             return redirect("/")
         return render_template("forum.html", forum=forum, threads=threads)
     else:
@@ -27,12 +27,12 @@ def forum(id):
 
 @app.route("/createthread", methods=["POST"])
 def createthread():
-    if session["id"]:
-        title = request.form["title"]
-        forum_id = request.form["forum_id"]
+    if session.get("id"):
+        title = request.form.get("title")
+        forum_id = request.form.get("forum_id")
 
         if len(title) > 50:
-            return error("Langan otsikko ei saa olla yli 50 merkkiä pitkä", "/")
+            return error("Langan otsikko ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
 
         if not create.create_thread(title, forum_id, session["id"]):
             flash("Langan otsikko ei voi olla tyhjä.") 
@@ -41,21 +41,22 @@ def createthread():
 
 @app.route("/deletethread", methods=["POST"])
 def deletethread():
-    thread_id = request.form["thread_id"]
-    forum_id = request.form["forum_id"]
+    thread_id = request.form.get("thread_id")
+    forum_id = request.form.get("forum_id")
 
-    delete.thread(forum_id, thread_id, session["admin"], session["id"])
+    if thread_id:
+        delete.thread(forum_id, thread_id, session.get("admin"), session.get("id"))
 
     return redirect(f"/forums/{forum_id}")
 
 
 @app.route("/createforum", methods=["POST"])
 def createforum():
-    if session["admin"]:
-        topic = request.form["topic"]
+    if session.get("admin"):
+        topic = request.form.get("topic")
         hidden = request.form.get("hidden")
         
-        if len(topic) > 500:
+        if len(topic) > 50:
             return error("Aihe ei saa olla yli 50 merkkiä pitkä", "/")
 
         if not create.create_forum(topic, bool(hidden)):
@@ -65,8 +66,8 @@ def createforum():
 
 @app.route("/deleteforum", methods=["POST"])
 def deleteforum():
-    if session["admin"]:
-        forum_id = request.form["forum_id"]
+    if session.get("admin"):
+        forum_id = request.form.get("forum_id")
         delete.forum(forum_id)
     return redirect("/")
 
@@ -75,22 +76,23 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     
-    username = request.form["username"]
-    password = request.form["password"]
-    confirm = request.form["confirm"]
+    username = request.form.get("username", "").strip()
+    password = request.form.get("password", "").strip()
+    confirm = request.form.get("confirm", "").strip()
 
+    if not username or not 3 <= len(username) <= 64:
+        return error("Käyttäjätunnuksen tulee olla 3–64 merkkiä pitkä.", request.path)
+    if not password or not 4 <= len(password) <= 64:
+        return error("Salasanan tulee olla 4–64 merkkiä pitkä.", request.path)
     if password != confirm:
         return error("Salasanat eivät täsmää", request.path)
-    if len(username) > 64:
-        return error("Käyttäjätunnus on liian pitkä", request.path)
-    if len(password) > 64:        
-        return error("Salasana on liian pitkä", request.path)
     if user.user_exists(username):
         return error("Käyttäjätunnus on jo olemassa", request.path)
 
     user.register(username, password)
 
     account = user.get_user(username)
+
     session["username"] = username
     session["admin"] = False
     session["id"] = account[0]
@@ -102,16 +104,18 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
-    username = request.form["username"]
-    if not user.user_exists(username):
-        flash("Väärä käyttäjänimi")
-        return redirect("/login")
+    username = request.form.get("username", "")
+    if not username.strip() or not user.user_exists(username):
+        return error("Väärä käyttäjänimi", request.path)
     
-    password = request.form["password"]
+    password = request.form.get("password", "")
+    if not password.strip():
+        return error("Väärä salasana", request.path)
+
     account = user.check_password(username, password)
+
     if account is None:
-        flash("Väärä salasana")
-        return redirect("/login")
+        return error("Väärä salasana", request.path)
     else:
         session["id"] = account[0]
         session["admin"] = account[1]
@@ -121,21 +125,21 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
-    del session["admin"]
-    del session["id"]
+    session.pop("username", None)
+    session.pop("admin", None)
+    session.pop("id", None)
     return redirect("/")
 
 @app.route("/promote/")
 def promote():
-    if session["id"]:
+    if session.get("id"):
         user.promote(session["id"])
         session["admin"] = True
     return redirect("/")
 
 @app.route("/demote/")
 def demote():
-    if session["id"]:
+    if session.get("id"):
         user.demote(session["id"])
         session["admin"] = False
     return redirect("/")
@@ -149,7 +153,7 @@ def thread(id):
     
     parent_id = get.parent(id)
     forum = get.forum(parent_id)
-    if forum[1] and not session["admin"]:              
+    if forum[1] and not session.get("admin"):              
         return redirect("/")
 
     messages = get.messages(id)
@@ -157,22 +161,24 @@ def thread(id):
 
 @app.route("/createmessage", methods=["POST"])
 def createmessage():
-    if not session["username"]:
+    if not session.get("username"):
         return redirect("/")
-    text = request.form["content"]
-    thread_id = request.form["thread_id"]    
+
+    text = request.form.get("content")
+    thread_id = request.form.get("thread_id", "-1")
     if len(text) > 500:
         return error("Viesti ei saa olla yli 500 merkkiä pitkä", f"/thread/{thread_id}")
-    if not create.create_message(text, thread_id, session["id"]):        
+    if not create.create_message(text, thread_id, session.get("id")):        
         flash("Viesti ei voi olla tyhjä.")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/deletemessage", methods=["POST"])
 def deletemessage():
-    message_id = request.form["message_id"]
-    thread_id = request.form["thread_id"]
+    message_id = request.form.get("message_id")
+    thread_id = request.form.get("thread_id", "0")
 
-    delete.message(message_id, session["admin"], session["id"], thread_id)
+    if message_id:
+        delete.message(message_id, session.get("admin"), session.get("id"), thread_id)
 
     return redirect(f"/thread/{thread_id}")
 
@@ -182,7 +188,7 @@ def search():
         return render_template("search.html", searched=False)
     
     
-    query = request.form["query"]
+    query = request.form.get("query", "")
     if not query.strip():
         return error("Hakusana ei saa olla tyhjä", "/search")
     messages = get.search(query)

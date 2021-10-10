@@ -2,9 +2,10 @@ from app import db
 from counter import decrement, decrement_tc, sub
 
 def forum(forum_id):
-    sql = "DELETE FROM forums WHERE forums.id=:id"
-    db.session.execute(sql, {"id":forum_id})
-    db.session.commit()
+    if (forum_id):
+        sql = "DELETE FROM forums WHERE forums.id=:id"
+        db.session.execute(sql, {"id":forum_id})
+        db.session.commit()
 
 def thread(forum_id, thread_id, admin, user_id):
     count_sql = "SELECT msgcount FROM threads WHERE threads.id=:thread_id;"
