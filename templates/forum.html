@@ -8,17 +8,20 @@
 <h1>{{forum.topic}}</h1>
 <hr>
 {% for thread in threads %}
-<b><a href="/thread/{{thread.id}}">{{thread.title}}</a></b> </br>
-<b>Luonut: {{thread.username}}</b> <br>
-Viestejä langassa: {{thread.msgcount}}.
-{% if session.username == thread.username or session.admin%}
-<form action="/deletethread" method="POST">
-    <input type="submit" value="Poista lanka">
-    <input type="hidden" name="thread_id" value="{{thread.id}}">
-    <input type="hidden" name="forum_id" value="{{forum.id}}">
-</form>
-{% endif %}
-<hr>
+    <b><a href="/thread/{{thread.id}}">{{thread.title}}</a></br>
+    Luonut: {{thread.username}}</b> <br>
+    Viestejä langassa: {{thread.msgcount}}
+    {% if thread.msgcount %}
+        <br>Viimeisin viesti: {{thread.lastmsg.strftime("%d.%m.%Y klo %H:%M:%S")}}
+    {% endif %}
+    {% if session.username == thread.username or session.admin%}
+        <form action="/deletethread" method="POST">
+            <input type="submit" value="Poista lanka">
+            <input type="hidden" name="thread_id" value="{{thread.id}}">
+            <input type="hidden" name="forum_id" value="{{forum.id}}">
+        </form>
+    {% endif %}
+    <hr>
 {% endfor %}
 </br>
 {% if session.username %}

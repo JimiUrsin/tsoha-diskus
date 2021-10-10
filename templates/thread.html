@@ -7,7 +7,7 @@
 <h1>{{thread.title}}</h1>
 <hr>
 {% for message in messages %}
-<b>Käyttäjä: {{message.username}}</b> </br>
+<b>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</b> </br>
 <p>{{message.content}}</p>
 {% if session.username == message.username or session.admin %}
 <form action="/deletemessage" method="POST">

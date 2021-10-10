@@ -13,20 +13,23 @@
 
 <h3>Aiheet</h3>
 {% for forum in forums %}
-{% if not forum.hide or session.admin %}
-<hr>
-<h4>
-<a href="/forums/{{forum.id}}">{{forum.topic}}</a><br>
-Lankoja aiheessa: {{forum.threadcount}}<br>
-Viestejä aiheessa: {{forum.msgcount}}
-{% if session.admin %}
-<form action="/deleteforum" method="POST">
-    <input type="submit" value="Poista aihe">
-    <input type="hidden" name="forum_id" value="{{forum.id}}">
-</form>
-{% endif %}
-</h4>
-{% endif %}
+    <h4>
+    {% if not forum.hide or session.admin %}
+        <hr>
+        <a href="/forums/{{forum.id}}">{{forum.topic}}</a><br>
+        Lankoja aiheessa: {{forum.threadcount}}<br>
+        Viestejä aiheessa: {{forum.msgcount}} <br>
+        {% if forum.lastmsg %}
+            Viimeisin viesti: {{forum.lastmsg.strftime("%d.%m.%Y klo %H:%M:%S")}}
+        {% endif %}
+        {% if session.admin %}
+            <form action="/deleteforum" method="POST">
+                <input type="submit" value="Poista aihe">
+                <input type="hidden" name="forum_id" value="{{forum.id}}">
+            </form>
+        {% endif %}
+    {% endif %}
+    </h4>
 {% endfor %}
 <hr>
 

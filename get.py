@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 def forum_exists(forum_id):
     sql = "SELECT 1 FROM forums WHERE id=:forum_id;"
@@ -6,14 +7,27 @@ def forum_exists(forum_id):
     return result.fetchone() is not None
 
 def get_forums():
-    sql = "SELECT forums.* FROM forums;"
+    subquery = "SELECT forums.id, MAX(messages.sent_at) AS lastmsg FROM messages " \
+    "LEFT JOIN threads ON messages.thread_id=threads.id " \
+    "LEFT JOIN forums ON threads.forum_id=forums.id " \
+    "GROUP BY forums.id"
+
+    sql = "SELECT forums.*, subq.lastmsg FROM forums " \
+    f"LEFT JOIN ({subquery}) AS subq ON subq.id=forums.id"
     result = db.session.execute(sql)
     forums = result.fetchall()
     return forums
 
 def get_threads(forum_id):
-    sql = "SELECT threads.id, threads.title, threads.msgcount, users.username FROM threads " \
-        "LEFT JOIN users ON threads.created_by=users.id WHERE threads.forum_id=:id;"    
+    subquery = "SELECT threads.id, MAX(messages.sent_at) AS lastmsg FROM messages " \
+    "LEFT JOIN threads ON messages.thread_id=threads.id " \
+    "LEFT JOIN forums ON threads.forum_id=forums.id " \
+    "GROUP BY threads.id"
+
+    sql = "SELECT threads.id, threads.title, threads.msgcount, users.username, subq.lastmsg FROM threads " \
+        "LEFT JOIN users ON threads.created_by=users.id " \
+        f"LEFT JOIN ({subquery}) AS subq ON subq.id=threads.id" \
+        " WHERE threads.forum_id=:id"
     result = db.session.execute(sql, {"id":forum_id})
     return result.fetchall()
 
