@@ -77,21 +77,24 @@ def register():
     
     username = request.form["username"]
     password = request.form["password"]
+    confirm = request.form["confirm"]
 
+    if password != confirm:
+        return error("Salasanat eivät täsmää", request.path)
     if len(username) > 64:
         return error("Käyttäjätunnus on liian pitkä", request.path)
     if len(password) > 64:        
         return error("Salasana on liian pitkä", request.path)
     if user.user_exists(username):
         return error("Käyttäjätunnus on jo olemassa", request.path)
-    else:
-        user.register(username, password)
 
-        account = user.get_user(username)
-        session["username"] = username
-        session["admin"] = False
-        session["id"] = account[0]
-        return redirect("/")
+    user.register(username, password)
+
+    account = user.get_user(username)
+    session["username"] = username
+    session["admin"] = False
+    session["id"] = account[0]
+    return redirect("/")
     
 
 @app.route("/login", methods=["GET", "POST"])
@@ -172,6 +175,18 @@ def deletemessage():
     delete.message(message_id, session["admin"], session["id"], thread_id)
 
     return redirect(f"/thread/{thread_id}")
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    if request.method == "GET":
+        return render_template("search.html", searched=False)
+    
+    
+    query = request.form["query"]
+    if not query.strip():
+        return error("Hakusana ei saa olla tyhjä", "/search")
+    messages = get.search(query)
+    return render_template("search.html", messages=messages, searched=True, query=query)
 
 def error(message, destination):
     flash(message)

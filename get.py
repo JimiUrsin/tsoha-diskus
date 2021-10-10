@@ -51,3 +51,11 @@ def parent(thread_id):
     sql = "SELECT forum_id FROM threads WHERE id=:thread_id;"
     result = db.session.execute(sql, {"thread_id": thread_id})
     return result.fetchone()[0]
+
+def search(query):
+    sql = "SELECT messages.*, threads.title FROM messages " \
+    "LEFT JOIN threads ON threads.id=messages.thread_id " \
+    "WHERE messages.content LIKE :query;"
+    result = db.session.execute(sql, {"query":f"%{query}%"})
+    return result.fetchall()
+
