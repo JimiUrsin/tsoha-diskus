@@ -5,7 +5,7 @@ Diskus on keskustelusovellus, jossa on useita alueita eri aiheen keskustelua var
 Sovellusta pääsee kokeilemaan siirtymällä Herokuun https://tsoha-diskus.herokuapp.com/
 
 ### Projektin nykytilanne (välipalautus 3)
-Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä on enää ketjujen ja viestien muokkauksen lisääminen ja tietenkin jo lisättyjen ominaisuuksien hiominen. Sovelluksen visuaalinen puoli kaipaa toki myös parannusta.
+Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä on enää ketjujen ja viestien muokkauksen lisääminen ja tietenkin jo lisättyjen ominaisuuksien hiominen. Sovelluksen visuaalinen puoli kaipaa toki myös parannusta. Koodin uudelleenjärjestäminen viime välipalautuksessa mainittuun muotoon olisi myös tarkoitus tehdä ennen lopullista palautusta.
 
 ### Sovelluksen ominaisuuksia
 ✅ = lisätty, ❌ = ei vielä lisätty
