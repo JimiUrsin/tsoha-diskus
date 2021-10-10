@@ -155,7 +155,7 @@ def thread(id):
     
     parent_id = get.parent(id)
     forum = get.forum(parent_id)
-    if forum[1] and not session.get("admin"):              
+    if forum[1] and not session.get("admin"):
         return redirect("/")
 
     messages = get.messages(id)

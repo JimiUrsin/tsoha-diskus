@@ -1,9 +1,5 @@
 <a href="/"><b>← Etusivulle</b></a></br>
 
-{% for message in get_flashed_messages() %}
-<strong style="color:red">{{message}}</strong>
-{% endfor %}
-
 <form action="/register" method="POST">
     Käyttäjänimi: </br>
     <input type="text" name="username"> </br>
@@ -15,3 +11,7 @@
 
     <input type="submit" value="Rekisteröidy">
 </form>
+
+{% for message in get_flashed_messages() %}
+<strong style="color:red">{{message}}</strong>
+{% endfor %}
