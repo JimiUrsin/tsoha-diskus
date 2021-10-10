@@ -55,7 +55,7 @@ def parent(thread_id):
 def search(query):
     sql = "SELECT messages.*, threads.title FROM messages " \
     "LEFT JOIN threads ON threads.id=messages.thread_id " \
-    "WHERE messages.content LIKE :query;"
+    "WHERE UPPER(messages.content) LIKE UPPER(:query);"
     result = db.session.execute(sql, {"query":f"%{query}%"})
     return result.fetchall()
 
