@@ -23,3 +23,4 @@ Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä 
 - ✅ Ylläpitäjä voi luoda salaisen alueen jolle vain ylläpitäjillä on pääsy
 
 ### Tiedetyt ongelmat
+- Sovelluksessa ei ole vielä suojausta CSRF:ää vastaan.
