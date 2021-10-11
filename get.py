@@ -1,7 +1,7 @@
 from app import db
 from datetime import datetime
 
-convert_time = "AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Helsinki'"
+convert_time = "AT TIME ZONE 'Etc/UTC' AT TIME ZONE 'Europe/Helsinki'"
 
 def forum_exists(forum_id):
     sql = "SELECT 1 FROM forums WHERE id=:forum_id;"
