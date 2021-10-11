@@ -1,13 +1,15 @@
 from app import db
 from datetime import datetime
 
+convert_time = "AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Helsinki'"
+
 def forum_exists(forum_id):
     sql = "SELECT 1 FROM forums WHERE id=:forum_id;"
     result = db.session.execute(sql, {"forum_id":forum_id})
     return result.fetchone() is not None
 
 def get_forums():
-    subquery = "SELECT forums.id, MAX(messages.sent_at) AS lastmsg FROM messages " \
+    subquery = f"SELECT forums.id, MAX(messages.sent_at) {convert_time} AS lastmsg FROM messages " \
     "LEFT JOIN threads ON messages.thread_id=threads.id " \
     "LEFT JOIN forums ON threads.forum_id=forums.id " \
     "GROUP BY forums.id"
@@ -19,7 +21,7 @@ def get_forums():
     return forums
 
 def get_threads(forum_id):
-    subquery = "SELECT threads.id, MAX(messages.sent_at) AS lastmsg FROM messages " \
+    subquery = f"SELECT threads.id, MAX(messages.sent_at) {convert_time} AS lastmsg FROM messages " \
     "LEFT JOIN threads ON messages.thread_id=threads.id " \
     "LEFT JOIN forums ON threads.forum_id=forums.id " \
     "GROUP BY threads.id"
@@ -32,7 +34,7 @@ def get_threads(forum_id):
     return result.fetchall()
 
 def messages(thread_id):
-    sql = "SELECT messages.*, users.username FROM messages " \
+    sql = f"SELECT messages.id, messages.thread_id, messages.content, messages.sent_at {convert_time} as sent_at, users.username FROM messages " \
     "LEFT JOIN users ON messages.user_id=users.id WHERE thread_id=:id;"
     result = db.session.execute(sql, {"id":thread_id})
     return result.fetchall()
@@ -53,7 +55,7 @@ def parent(thread_id):
     return result.fetchone()[0]
 
 def search(query):
-    sql = "SELECT messages.*, users.username, threads.title FROM messages " \
+    sql = f"SELECT messages.id, messages.thread_id, messages.content, messages.sent_at {convert_time} AS sent_at, users.username, threads.title FROM messages " \
     "LEFT JOIN threads ON threads.id=messages.thread_id " \
     "LEFT JOIN users ON users.id=messages.user_id " \
     "WHERE UPPER(messages.content) LIKE UPPER(:query);"
