@@ -43,10 +43,10 @@
 {% endfor %}
 
 {% if session.username %}
-    </br></br>
+    <br><br>
     <a href="/logout"> Kirjaudu ulos</a>
 
-    </br>
+    <br>
     {% if session.admin %}
         <a href="/demote/">Muuta itsesi käyttäjäksi</a>
     {% else %}

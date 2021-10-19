@@ -1,4 +1,4 @@
-<a href="/"><b>← Etusivulle</b></a><br>
+<a href="/"><strong>← Etusivulle</strong></a><br>
 <form action="/search" method="POST">
     <input type="text" name="query" placeholder="Hakusana">
     <input type="submit" value="Etsi viestejä">
@@ -11,7 +11,7 @@ Hakusanalla "{{query}}" löytyi {{messages|length}} viesti{% if messages|length 
 <strong style="color:red">{{message}}</strong>
 {% endfor %}
 {% for message in messages %}
-<b>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</b> </br>
+<strong>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</strong> <br>
 {{message.content}} <br>
 <a href="/thread/{{message.thread_id}}">Siirry lankaan "{{message.title}}" →</a>
 <hr>

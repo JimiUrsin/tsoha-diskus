@@ -9,7 +9,7 @@
         <strong><a href="/thread/{{thread.id}}">{{thread.title}}</a></strong>
 
         {% if session.admin or session.username==thread.username %}
-            <button onclick="edit({{thread.id}});">Muokkaa otsikkoa</button></br>
+            <button onclick="edit({{thread.id}});">Muokkaa otsikkoa</button><br>
         {% endif %}
     </div>
 
@@ -39,7 +39,7 @@
     {% endif %}
     <hr>
 {% endfor %}
-</br>
+<br>
 {% if session.username %}
 <form action="/createthread" method="POST">
     <input type="text" name="title">
