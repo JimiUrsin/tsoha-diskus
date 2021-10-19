@@ -5,6 +5,7 @@ import create
 import get
 import user
 import delete
+from thread import edit_thread, create_thread
 
 @app.route("/")
 def index():
@@ -34,7 +35,7 @@ def createthread():
         if len(title) > 50:
             return error("Langan otsikko ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
 
-        if not create.create_thread(title, forum_id, session["id"]):
+        if not create_thread(title, forum_id, session["id"]):
             flash("Langan otsikko ei voi olla tyhjä.") 
 
     return redirect(f"/forums/{forum_id}")
@@ -198,10 +199,22 @@ def search():
 
 @app.route("/editthread", methods=["POST"])
 def editthread():
-    return redirect("/")
+    thread_id=request.form.get("thread_id")
+    title=request.form.get("title", "")
+    forum_id=request.form.get("forum_id")
+
+    if not title.strip():
+        return error("Aihe ei saa olla tyhjä", f"/forums/{forum_id}")
+
+    if thread_id and title:
+        if len(title) > 50:
+            return error("Aihe ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
+        edit_thread(thread_id, title, session.get("admin", False), session.get("id", 0))
+    
+    return redirect(f"/forums/{forum_id}")
 
 @app.route("/editmessage", methods=["POST"])
-def editthread():
+def editmessage():
     return redirect("/")
 
 def error(message, destination):
