@@ -58,7 +58,7 @@ def search(query):
     sql = f"SELECT messages.id, messages.thread_id, messages.content, messages.sent_at {convert_time} AS sent_at, users.username, threads.title FROM messages " \
     "LEFT JOIN threads ON threads.id=messages.thread_id " \
     "LEFT JOIN users ON users.id=messages.user_id " \
-    "WHERE UPPER(messages.content) LIKE UPPER(:query);"
+    "WHERE messages.content ILIKE :query;"
     result = db.session.execute(sql, {"query":f"%{query}%"})
     return result.fetchall()
 
