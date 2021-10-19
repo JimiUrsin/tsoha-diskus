@@ -141,6 +141,7 @@ def logout():
     session.pop("username", None)
     session.pop("admin", None)
     session.pop("id", None)
+    session.pop("csrf_token", None)
     return redirect("/")
 
 @app.route("/promote/")
