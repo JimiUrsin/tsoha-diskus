@@ -12,17 +12,15 @@
             <button onclick="edit({{thread.id}});">Muokkaa otsikkoa</button><br>
         {% endif %}
     </div>
-
     <!-- Edit form, hidden until the user presses "Muokkaa otsikkoa" -->
     <div id="edit_{{thread.id}}" style="display:none">
-        <form action="/editthread" method="POST">
+        <form action="/editthread" method="POST" style="margin-bottom:0em">
             <input type="text" name="title" value="{{thread.title}}">
             <input type="hidden" name="thread_id" value="{{thread.id}}">
             <input type="hidden" name="forum_id" value="{{forum.id}}">
             <input type="submit" value="Vaihda nimi">
+            <button type="button" onclick="cancel({{thread.id}});">Peruuta</button>
         </form>
-
-        <button onclick="cancel({{thread.id}});">Peruuta</button>
     </div>
     
     Luonut: {{thread.username}}</b> <br>
