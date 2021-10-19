@@ -36,7 +36,8 @@ def edit(message_id, content, admin, user_id):
 
 def get_all(thread_id):
     sql = f"SELECT messages.id, messages.thread_id, messages.content, messages.sent_at AT TIME ZONE 'Etc/UTC' AT TIME ZONE 'Europe/Helsinki' as sent_at, users.username FROM messages " \
-    "LEFT JOIN users ON messages.user_id=users.id WHERE thread_id=:id;"
+    "LEFT JOIN users ON messages.user_id=users.id WHERE thread_id=:id " \
+    "ORDER BY sent_at ASC;"
     result = db.session.execute(sql, {"id":thread_id})
     return result.fetchall()
 

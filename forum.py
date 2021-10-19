@@ -31,7 +31,8 @@ def get_all():
     "GROUP BY forums.id"
 
     sql = "SELECT forums.*, subq.lastmsg FROM forums " \
-    f"LEFT JOIN ({subquery}) AS subq ON subq.id=forums.id"
+    f"LEFT JOIN ({subquery}) AS subq ON subq.id=forums.id " \
+    "ORDER BY forums.topic ASC;"
     result = db.session.execute(sql)
     forums = result.fetchall()
     return forums

@@ -50,7 +50,8 @@ def get_all(forum_id):
     sql = "SELECT threads.id, threads.title, threads.msgcount, users.username, subq.lastmsg FROM threads " \
         "LEFT JOIN users ON threads.created_by=users.id " \
         f"LEFT JOIN ({subquery}) AS subq ON subq.id=threads.id" \
-        " WHERE threads.forum_id=:id"
+        " WHERE threads.forum_id=:id " \
+        "ORDER BY subq.lastmsg DESC;"
     result = db.session.execute(sql, {"id":forum_id})
     return result.fetchall()
 
