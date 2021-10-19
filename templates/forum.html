@@ -1,14 +1,26 @@
 <title>Diskus - {{forum.topic}}</title>
 
 <a href="/"><strong>← Etusivulle</strong></a><br>
-<h1>{{forum.topic}}</h1>
+<h1>{{forum.topic}}
+{% if session.username %}
+    <form action="{{forum.id}}" method="GET" style="right:1em; position:absolute">
+        {% if not edit %}<input type="hidden" name="edit" value=1>{% endif %}
+        <input type="submit" value="{% if edit %}Lopeta muokkaus{% else %}Muokkaa{% endif%}">
+    </form>
+{% endif %}
+</h1>
+
+
+
 <hr>
 {% for thread in threads %}
     <div id="title_{{thread.id}}" style="display:block">        
         <strong><a href="/thread/{{thread.id}}">{{thread.title}}</a></strong>
 
-        {% if session.admin or session.username==thread.username %}
-            <button onclick="edit({{thread.id}});">Muokkaa otsikkoa</button><br>
+        {% if edit %}
+            {% if session.admin or session.username==thread.username %}
+                <button onclick="edit({{thread.id}});">Muokkaa otsikkoa</button><br>
+            {% endif %}
         {% endif %}
     </div>
     <!-- Edit form, hidden until the user presses "Muokkaa otsikkoa" -->
@@ -28,7 +40,7 @@
     {% if thread.msgcount %}
         <br>Viimeisin viesti: {{thread.lastmsg.strftime("%d.%m.%Y klo %H:%M:%S")}}
     {% endif %}
-    {% if session.username == thread.username or session.admin%}
+    {% if edit and (session.username == thread.username or session.admin) %}
         <form action="/deletethread" method="POST">
             <input type="submit" value="Poista lanka">
             <input type="hidden" name="thread_id" value="{{thread.id}}">

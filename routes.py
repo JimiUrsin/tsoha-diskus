@@ -16,6 +16,7 @@ def index():
 @app.route("/forums/<int:id>")
 def render_forum(id):
     exists = forum.exists(id)
+    edit = request.args.get("edit") == "1"
 
     if exists:
         threads = thread.get_all(id)
@@ -23,7 +24,7 @@ def render_forum(id):
         if found_forum[1] and not session.get("admin"):
             # Forum was hidden and the current user is not an admin
             return redirect("/")
-        return render_template("forum.html", forum=found_forum, threads=threads)
+        return render_template("forum.html", forum=found_forum, threads=threads, edit=edit)
     else:
         return redirect("/")
 
@@ -163,6 +164,7 @@ def demote():
 @app.route("/thread/<int:id>")
 def render_thread(id):
     found_thread = thread.get(id)
+    edit = request.args.get("edit") == "1"
     
     if found_thread is None:
         return redirect("/")
@@ -173,7 +175,7 @@ def render_thread(id):
         return redirect("/")
 
     messages = message.get_all(id)
-    return render_template("thread.html", messages=messages, thread=found_thread)
+    return render_template("thread.html", messages=messages, thread=found_thread, edit=edit)
 
 @app.route("/createmessage", methods=["POST"])
 def create_message():
