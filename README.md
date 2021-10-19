@@ -25,3 +25,4 @@ Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä 
 
 ### Tiedetyt ongelmat
 - Sovelluksessa ei ole vielä suojausta CSRF:ää vastaan.
+- Langat ja viestit eivät kerro onko niitä muokattu
