@@ -196,6 +196,14 @@ def search():
     messages = get.search(query)
     return render_template("search.html", messages=messages, searched=True, query=query)
 
+@app.route("/editthread", methods=["POST"])
+def editthread():
+    return redirect("/")
+
+@app.route("/editmessage", methods=["POST"])
+def editthread():
+    return redirect("/")
+
 def error(message, destination):
     flash(message)
     return redirect(destination)

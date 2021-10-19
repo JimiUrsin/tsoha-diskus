@@ -1,11 +1,30 @@
 
 <title>Diskus - {{forum.topic}}</title>
 
-<a href="/"><b>← Etusivulle</b></a><br>
+<a href="/"><strong>← Etusivulle</strong></a><br>
 <h1>{{forum.topic}}</h1>
 <hr>
 {% for thread in threads %}
-    <b><a href="/thread/{{thread.id}}">{{thread.title}}</a></br>
+    <div id="title_{{thread.id}}" style="display:block">        
+        <strong><a href="/thread/{{thread.id}}">{{thread.title}}</a></strong>
+
+        {% if session.admin or session.username==thread.username %}
+            <button onclick="edit({{thread.id}});">Muokkaa otsikkoa</button></br>
+        {% endif %}
+    </div>
+
+    <!-- Edit form, hidden until the user presses "Muokkaa otsikkoa" -->
+    <div id="edit_{{thread.id}}" style="display:none">
+        <form action="/editthread" method="POST">
+            <input type="text" name="title" value="{{thread.title}}">
+            <input type="hidden" name="thread_id" value="{{thread.id}}">
+            <input type="hidden" name="forum_id" value="{{forum.id}}">
+            <input type="submit" value="Vaihda nimi">
+        </form>
+
+        <button onclick="cancel({{thread.id}});">Peruuta</button>
+    </div>
+    
     Luonut: {{thread.username}}</b> <br>
     Viestejä langassa: {{thread.msgcount}}
     {% if thread.msgcount %}
@@ -31,3 +50,14 @@
 {% for message in get_flashed_messages() %}
 <strong style="color:red">{{message}}</strong>
 {% endfor %}
+
+<script type="text/javascript">
+    function edit(thread_id) {
+        document.getElementById("edit_" + thread_id).style.display="block";
+        document.getElementById("title_" + thread_id).style.display="none";
+    }
+    function cancel(thread_id) {
+        document.getElementById("edit_" + thread_id).style.display="none";
+        document.getElementById("title_" + thread_id).style.display="block";
+    }
+</script>
