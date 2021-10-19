@@ -1,12 +1,12 @@
 from flask import render_template, redirect, request, session, flash
 from app import app
 
-import create
 import get
 import user
-import delete
-from thread import edit_thread, create_thread
-from message import edit_message
+
+import forum
+import message
+import thread
 
 @app.route("/")
 def index():
@@ -14,7 +14,7 @@ def index():
     return render_template("index.html", forums = forums)
 
 @app.route("/forums/<int:id>")
-def forum(id):
+def render_forum(id):
     exists = get.forum_exists(id)
 
     if exists:
@@ -26,9 +26,8 @@ def forum(id):
     else:
         return redirect("/")
 
-
 @app.route("/createthread", methods=["POST"])
-def createthread():
+def create_thread():
     if session.get("id"):
         title = request.form.get("title")
         forum_id = request.form.get("forum_id")
@@ -36,24 +35,24 @@ def createthread():
         if len(title) > 50:
             return error("Langan otsikko ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
 
-        if not create_thread(title, forum_id, session["id"]):
+        if not thread.create(title, forum_id, session["id"]):
             flash("Langan otsikko ei voi olla tyhjä.") 
 
     return redirect(f"/forums/{forum_id}")
 
 @app.route("/deletethread", methods=["POST"])
-def deletethread():
+def delete_thread():
     thread_id = request.form.get("thread_id")
     forum_id = request.form.get("forum_id")
 
     if thread_id:
-        delete.thread(forum_id, thread_id, session.get("admin"), session.get("id"))
+        thread.delete(forum_id, thread_id, session.get("admin"), session.get("id"))
 
     return redirect(f"/forums/{forum_id}")
 
 
 @app.route("/createforum", methods=["POST"])
-def createforum():
+def create_forum():
     if session.get("admin"):
         topic = request.form.get("topic")
         hidden = request.form.get("hidden")
@@ -61,16 +60,16 @@ def createforum():
         if len(topic) > 50:
             return error("Aihe ei saa olla yli 50 merkkiä pitkä", "/")
 
-        if not create.create_forum(topic, bool(hidden)):
+        if not forum.create(topic, bool(hidden)):
             flash("Aiheen nimi ei voi olla tyhjä.")       
 
     return redirect("/")
 
 @app.route("/deleteforum", methods=["POST"])
-def deleteforum():
+def delete_forum():
     if session.get("admin"):
         forum_id = request.form.get("forum_id")
-        delete.forum(forum_id)
+        forum.delete(forum_id)
     return redirect("/")
 
 @app.route("/register", methods=["GET", "POST"])
@@ -149,7 +148,7 @@ def demote():
     return redirect("/")
 
 @app.route("/thread/<int:id>")
-def thread(id):
+def render_thread(id):
     thread = get.thread(id)
     
     if thread is None:
@@ -164,7 +163,7 @@ def thread(id):
     return render_template("thread.html", messages=messages, thread=thread)
 
 @app.route("/createmessage", methods=["POST"])
-def createmessage():
+def create_message():
     if not session.get("username"):
         return redirect("/")
 
@@ -172,17 +171,17 @@ def createmessage():
     thread_id = request.form.get("thread_id", "-1")
     if len(text) > 500:
         return error("Viesti ei saa olla yli 500 merkkiä pitkä", f"/thread/{thread_id}")
-    if not create.create_message(text, thread_id, session.get("id")):        
+    if not message.create(text, thread_id, session.get("id")):        
         flash("Viesti ei voi olla tyhjä.")
     return redirect(f"/thread/{thread_id}")
 
 @app.route("/deletemessage", methods=["POST"])
-def deletemessage():
+def delete_message():
     message_id = request.form.get("message_id")
     thread_id = request.form.get("thread_id", "0")
 
     if message_id:
-        delete.message(message_id, session.get("admin"), session.get("id"), thread_id)
+        message.delete(message_id, session.get("admin"), session.get("id"), thread_id)
 
     return redirect(f"/thread/{thread_id}")
 
@@ -199,7 +198,7 @@ def search():
     return render_template("search.html", messages=messages, searched=True, query=query)
 
 @app.route("/editthread", methods=["POST"])
-def editthread():
+def edit_thread():
     thread_id=request.form.get("thread_id")
     title=request.form.get("title", "")
     forum_id=request.form.get("forum_id")
@@ -210,12 +209,12 @@ def editthread():
     if thread_id and title:
         if len(title) > 50:
             return error("Aihe ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
-        edit_thread(thread_id, title, session.get("admin", False), session.get("id", 0))
+        thread.edit(thread_id, title, session.get("admin", False), session.get("id", 0))
     
     return redirect(f"/forums/{forum_id}")
 
 @app.route("/editmessage", methods=["POST"])
-def editmessage():
+def edit_message():
     message_id=request.form.get("message_id")
     content=request.form.get("content", "")
     thread_id=request.form.get("thread_id")
@@ -225,7 +224,7 @@ def editmessage():
     if content and message_id:
         if len(content) > 500:
             return error("Viesti ei saa olla yli 500 merkkiä pitkä", f"/thread/{thread_id}")
-        edit_message(message_id, content, session.get("admin", False), session.get("id", 0))     
+        message.edit(message_id, content, session.get("admin", False), session.get("id", 0))     
 
     return redirect(f"/thread/{thread_id}")
 
