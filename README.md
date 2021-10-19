@@ -24,5 +24,4 @@ Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä 
 - ❌ Ylläpitäjä voi määrittää, keillä käyttäjistä on oikeus päästä tietyille alueille
 
 ### Tiedetyt ongelmat
-- Sovelluksessa ei ole vielä suojausta CSRF:ää vastaan.
 - Langat ja viestit eivät kerro onko niitä muokattu

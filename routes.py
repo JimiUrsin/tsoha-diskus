@@ -1,5 +1,7 @@
-from flask import render_template, redirect, request, session, flash
+from flask import render_template, redirect, request, session, flash, abort
 from app import app
+
+import secrets
 
 import user
 import forum
@@ -27,6 +29,9 @@ def render_forum(id):
 
 @app.route("/createthread", methods=["POST"])
 def create_thread():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
+
     if session.get("id"):
         title = request.form.get("title")
         forum_id = request.form.get("forum_id")
@@ -41,6 +46,8 @@ def create_thread():
 
 @app.route("/deletethread", methods=["POST"])
 def delete_thread():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
     thread_id = request.form.get("thread_id")
     forum_id = request.form.get("forum_id")
 
@@ -52,6 +59,8 @@ def delete_thread():
 
 @app.route("/createforum", methods=["POST"])
 def create_forum():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
     if session.get("admin"):
         topic = request.form.get("topic")
         hidden = request.form.get("hidden")
@@ -66,6 +75,8 @@ def create_forum():
 
 @app.route("/deleteforum", methods=["POST"])
 def delete_forum():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
     if session.get("admin"):
         forum_id = request.form.get("forum_id")
         forum.delete(forum_id)
@@ -96,6 +107,7 @@ def register():
     session["username"] = username
     session["admin"] = False
     session["id"] = account[0]
+    session["csrf_token"] = secrets.token_hex(16)
     return redirect("/")
     
 
@@ -120,6 +132,7 @@ def login():
         session["id"] = account[0]
         session["admin"] = account[1]
         session["username"] = account[2]
+        session["csrf_token"] = secrets.token_hex(16)
     return redirect("/")
     
 
@@ -163,6 +176,8 @@ def render_thread(id):
 
 @app.route("/createmessage", methods=["POST"])
 def create_message():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
     if not session.get("username"):
         return redirect("/")
 
@@ -176,6 +191,8 @@ def create_message():
 
 @app.route("/deletemessage", methods=["POST"])
 def delete_message():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
     message_id = request.form.get("message_id")
     thread_id = request.form.get("thread_id", "0")
 
@@ -197,6 +214,8 @@ def search():
 
 @app.route("/editthread", methods=["POST"])
 def edit_thread():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
     thread_id=request.form.get("thread_id")
     title=request.form.get("title", "")
     forum_id=request.form.get("forum_id")
@@ -213,6 +232,8 @@ def edit_thread():
 
 @app.route("/editmessage", methods=["POST"])
 def edit_message():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
     message_id=request.form.get("message_id")
     content=request.form.get("content", "")
     thread_id=request.form.get("thread_id")

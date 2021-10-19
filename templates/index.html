@@ -23,6 +23,7 @@
             <form action="/deleteforum" method="POST">
                 <input type="submit" value="Poista aihe">
                 <input type="hidden" name="forum_id" value="{{forum.id}}">
+                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
             </form>
         {% endif %}
     {% endif %}
@@ -36,6 +37,7 @@
     <input type="checkbox" id="hidden" name="hidden">
     <label for="hidden">Piilotettu</label> <br>
     <input type="submit" value="Tee uusi aihe">
+    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
 </form>
 {% endif %}
 {% for message in get_flashed_messages() %}

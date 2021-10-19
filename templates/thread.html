@@ -13,6 +13,7 @@
             <button type="button" onclick="edit({{message.id}});">Muokkaa viestiä</button><br>
             <input type="hidden" name="message_id" value="{{message.id}}">
             <input type="hidden" name="thread_id" value="{{thread.id}}">    
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
         </form>
     {% endif %}
     </div>
@@ -24,6 +25,7 @@
             <input type="hidden" name="thread_id" value="{{thread.id}}">
             <input type="submit" value="Vahvista muutokset">
             <button type="button" onclick="cancel({{message.id}});">Peruuta</button>
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
         </form>
     </div>
 
@@ -35,6 +37,7 @@
     <input type="text" name="content">
     <input type="submit" value="Lähetä viesti">
     <input type="hidden" name="thread_id" value="{{thread.id}}">    
+    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
 </form>
 {% endif %}
 {% for message in get_flashed_messages() %}

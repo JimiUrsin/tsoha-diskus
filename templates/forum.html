@@ -1,4 +1,3 @@
-
 <title>Diskus - {{forum.topic}}</title>
 
 <a href="/"><strong>← Etusivulle</strong></a><br>
@@ -18,6 +17,7 @@
             <input type="text" name="title" value="{{thread.title}}">
             <input type="hidden" name="thread_id" value="{{thread.id}}">
             <input type="hidden" name="forum_id" value="{{forum.id}}">
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
             <input type="submit" value="Vaihda nimi">
             <button type="button" onclick="cancel({{thread.id}});">Peruuta</button>
         </form>
@@ -33,6 +33,7 @@
             <input type="submit" value="Poista lanka">
             <input type="hidden" name="thread_id" value="{{thread.id}}">
             <input type="hidden" name="forum_id" value="{{forum.id}}">
+            <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
         </form>
     {% endif %}
     <hr>
@@ -42,7 +43,8 @@
 <form action="/createthread" method="POST">
     <input type="text" name="title">
     <input type="submit" value="Tee uusi lanka">
-    <input type="hidden" name="forum_id" value="{{forum.id}}">    
+    <input type="hidden" name="forum_id" value="{{forum.id}}">
+    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
 </form>
 {% endif %}
 {% for message in get_flashed_messages() %}
