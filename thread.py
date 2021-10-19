@@ -35,3 +35,26 @@ def edit(thread_id, title, admin, user_id):
     
     db.session.execute(sql, {"title":title, "thread_id":thread_id, "user_id":user_id})
     db.session.commit()
+
+def get(thread_id):
+    sql = "SELECT * FROM threads WHERE id=:id;"    
+    result = db.session.execute(sql, {"id": thread_id})
+    return result.fetchone()
+
+def get_all(forum_id):
+    subquery = f"SELECT threads.id, MAX(messages.sent_at) AT TIME ZONE 'Etc/UTC' AT TIME ZONE 'Europe/Helsinki' AS lastmsg FROM messages " \
+    "LEFT JOIN threads ON messages.thread_id=threads.id " \
+    "LEFT JOIN forums ON threads.forum_id=forums.id " \
+    "GROUP BY threads.id"
+
+    sql = "SELECT threads.id, threads.title, threads.msgcount, users.username, subq.lastmsg FROM threads " \
+        "LEFT JOIN users ON threads.created_by=users.id " \
+        f"LEFT JOIN ({subquery}) AS subq ON subq.id=threads.id" \
+        " WHERE threads.forum_id=:id"
+    result = db.session.execute(sql, {"id":forum_id})
+    return result.fetchall()
+
+def parent(thread_id):
+    sql = "SELECT forum_id FROM threads WHERE id=:thread_id;"
+    result = db.session.execute(sql, {"thread_id": thread_id})
+    return result.fetchone()[0]

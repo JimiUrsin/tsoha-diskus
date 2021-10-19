@@ -1,28 +1,27 @@
 from flask import render_template, redirect, request, session, flash
 from app import app
 
-import get
 import user
-
 import forum
 import message
 import thread
 
 @app.route("/")
 def index():
-    forums = get.get_forums()
+    forums = forum.get_all()
     return render_template("index.html", forums = forums)
 
 @app.route("/forums/<int:id>")
 def render_forum(id):
-    exists = get.forum_exists(id)
+    exists = forum.exists(id)
 
     if exists:
-        threads = get.get_threads(id)
-        forum = get.forum(id)
-        if forum[1] and not session.get("admin"):
+        threads = thread.get_all(id)
+        found_forum = forum.get(id)
+        if found_forum[1] and not session.get("admin"):
+            # Forum was hidden and the current user is not an admin
             return redirect("/")
-        return render_template("forum.html", forum=forum, threads=threads)
+        return render_template("forum.html", forum=found_forum, threads=threads)
     else:
         return redirect("/")
 
@@ -149,18 +148,18 @@ def demote():
 
 @app.route("/thread/<int:id>")
 def render_thread(id):
-    thread = get.thread(id)
+    found_thread = thread.get(id)
     
-    if thread is None:
+    if found_thread is None:
         return redirect("/")
     
-    parent_id = get.parent(id)
-    forum = get.forum(parent_id)
-    if forum[1] and not session.get("admin"):
+    parent_id = thread.parent(id)
+    parent_forum = forum.get(parent_id)
+    if parent_forum[1] and not session.get("admin"):
         return redirect("/")
 
-    messages = get.messages(id)
-    return render_template("thread.html", messages=messages, thread=thread)
+    messages = message.get_all(id)
+    return render_template("thread.html", messages=messages, thread=found_thread)
 
 @app.route("/createmessage", methods=["POST"])
 def create_message():
@@ -188,13 +187,12 @@ def delete_message():
 @app.route("/search", methods=["GET", "POST"])
 def search():
     if request.method == "GET":
-        return render_template("search.html", searched=False)
-    
+        return render_template("search.html", searched=False)    
     
     query = request.form.get("query", "")
     if not query.strip():
         return error("Hakusana ei saa olla tyhjä", "/search")
-    messages = get.search(query)
+    messages = message.search(query)
     return render_template("search.html", messages=messages, searched=True, query=query)
 
 @app.route("/editthread", methods=["POST"])
