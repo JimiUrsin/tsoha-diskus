@@ -6,6 +6,7 @@ import get
 import user
 import delete
 from thread import edit_thread, create_thread
+from message import edit_message
 
 @app.route("/")
 def index():
@@ -215,7 +216,18 @@ def editthread():
 
 @app.route("/editmessage", methods=["POST"])
 def editmessage():
-    return redirect("/")
+    message_id=request.form.get("message_id")
+    content=request.form.get("content", "")
+    thread_id=request.form.get("thread_id")
+
+    if not content.strip():
+        return error("Viesti ei saa olla tyhjä", f"/thread/{thread_id}")
+    if content and message_id:
+        if len(content) > 500:
+            return error("Viesti ei saa olla yli 500 merkkiä pitkä", f"/thread/{thread_id}")
+        edit_message(message_id, content, session.get("admin", False), session.get("id", 0))     
+
+    return redirect(f"/thread/{thread_id}")
 
 def error(message, destination):
     flash(message)

@@ -3,7 +3,7 @@ from counter import increment_tc
 
 def edit_thread(thread_id, title, admin, user_id):
     if admin:
-        sql = "UPDATE threads SET title=:title WHERE threads.id=:thread_id"
+        sql = "UPDATE threads SET title=:title WHERE threads.id=:thread_id;"
     else:
         sql = "UPDATE threads SET title=:title WHERE threads.id=:thread_id AND threads.created_by=:user_id;"
     
