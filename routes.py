@@ -212,7 +212,7 @@ def search():
     query = request.form.get("query", "")
     if not query.strip():
         return error("Hakusana ei saa olla tyhjä", "/search")
-    messages = message.search(query)
+    messages = message.search(query, session.get("admin"))
     return render_template("search.html", messages=messages, searched=True, query=query)
 
 @app.route("/editthread", methods=["POST"])
