@@ -23,7 +23,7 @@ def render_forum(id):
         found_forum = forum.get(id)
         if found_forum[1] and not session.get("admin"):
             # Forum was hidden and the current user is not an admin
-            return redirect("/")
+            return render_template("norights.html")
         return render_template("forum.html", forum=found_forum, threads=threads, edit=edit)
     else:
         return redirect("/")
@@ -172,7 +172,7 @@ def render_thread(id):
     parent_id = thread.parent(id)
     parent_forum = forum.get(parent_id)
     if parent_forum[1] and not session.get("admin"):
-        return redirect("/")
+        return render_template("norights.html")
 
     messages = message.get_all(id)
     return render_template("thread.html", messages=messages, thread=found_thread, edit=edit)
