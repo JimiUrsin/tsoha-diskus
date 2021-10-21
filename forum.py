@@ -36,3 +36,8 @@ def get_all():
     result = db.session.execute(sql)
     forums = result.fetchall()
     return forums
+
+def get_allowed(forum_id):
+    sql = "SELECT user_id FROM allow WHERE forum_id=:forum_id;"
+    result = db.session.execute(sql, {"forum_id":forum_id}).fetchall()
+    return [r[0] for r in result]

@@ -29,3 +29,8 @@ CREATE TABLE IF NOT EXISTS messages (
 	content TEXT,
 	sent_at TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS allow (
+	user_id INTEGER REFERENCES users,
+	forum_id INTEGER REFERENCES forums
+);

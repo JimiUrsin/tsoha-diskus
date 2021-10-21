@@ -11,9 +11,9 @@
 <h3>Aiheet</h3>
 {% for forum in forums %}
     <h4>
-    {% if not forum.hide or session.admin %}
+    {% if not forum.hide or session.admin or (session.allowed and forum.id in session.allowed) %}
         <hr>
-        <a href="/forums/{{forum.id}}">{{forum.topic}}</a><br>
+        <a href="/forums/{{forum.id}}">{{forum.topic}}</a> {% if forum.hide %} (Piilotettu aihe) {% endif %} <br>
         Lankoja aiheessa: {{forum.threadcount}}<br>
         Viestejä aiheessa: {{forum.msgcount}} <br>
         {% if forum.lastmsg %}
@@ -22,6 +22,7 @@
         {% if session.admin %}
             <form action="/deleteforum" method="POST">
                 <input type="submit" value="Poista aihe">
+                {% if forum.hide %}<button type="button" onclick="location.href='manage-rights?id={{forum.id}}'">Muokkaa pääsyoikeuksia</button>{% endif %}
                 <input type="hidden" name="forum_id" value="{{forum.id}}">
                 <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
             </form>

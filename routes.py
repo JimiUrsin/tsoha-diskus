@@ -21,7 +21,7 @@ def render_forum(id):
     if exists:
         threads = thread.get_all(id)
         found_forum = forum.get(id)
-        if found_forum[1] and not session.get("admin"):
+        if found_forum[1] and not session.get("admin") and found_forum[0] not in session.get("allowed"):
             # Forum was hidden and the current user is not an admin
             return render_template("norights.html")
         return render_template("forum.html", forum=found_forum, threads=threads, edit=edit)
@@ -103,12 +103,13 @@ def register():
 
     user.register(username, password)
 
-    account = user.get_user(username)
+    account = user.get(username)
 
     session["username"] = username
     session["admin"] = False
     session["id"] = account[0]
     session["csrf_token"] = secrets.token_hex(16)
+    session["allowed"] = user.get_allowed_forums(account[0])
     return redirect("/")
     
 
@@ -134,6 +135,7 @@ def login():
         session["admin"] = account[1]
         session["username"] = account[2]
         session["csrf_token"] = secrets.token_hex(16)
+        session["allowed"] = user.get_allowed_forums(account[0])
     return redirect("/")
     
 
@@ -143,6 +145,7 @@ def logout():
     session.pop("admin", None)
     session.pop("id", None)
     session.pop("csrf_token", None)
+    session.pop("allowed", None)
     return redirect("/")
 
 @app.route("/promote/")
@@ -171,7 +174,7 @@ def render_thread(id):
     
     parent_id = thread.parent(id)
     parent_forum = forum.get(parent_id)
-    if parent_forum[1] and not session.get("admin"):
+    if parent_forum[1] and not session.get("admin") and parent_forum[0] not in session.get("allowed"):
         return render_template("norights.html")
 
     messages = message.get_all(id)
@@ -212,7 +215,7 @@ def search():
     query = request.form.get("query", "")
     if not query.strip():
         return error("Hakusana ei saa olla tyhjä", "/search")
-    messages = message.search(query, session.get("admin"))
+    messages = message.search(query)
     return render_template("search.html", messages=messages, searched=True, query=query)
 
 @app.route("/editthread", methods=["POST"])
@@ -249,6 +252,35 @@ def edit_message():
         message.edit(message_id, content, session.get("admin", False), session.get("id", 0))     
 
     return redirect(f"/thread/{thread_id}")
+
+@app.route("/manage-rights", methods=["GET"])
+def get_rights():
+    users = user.get_all()
+    forum_id = request.args.get("id")
+    found_forum = forum.get(forum_id)
+    allowed = forum.get_allowed(forum_id)
+    if not found_forum:
+        return redirect("/")
+    
+    return render_template("manage-rights.html", users=users, forum=found_forum, allowed=allowed)
+
+@app.route("/manage-rights", methods=["POST"])
+def set_rights():
+    forum_id = request.form.get("forum_id")
+    allowed = forum.get_allowed(forum_id)
+    unwanted_keys = ["csrf_token", "forum_id"]
+
+    # Only access database when a change is requested
+    # Maybe there's a way to do this over on the database?
+    for (user_id, allow) in request.form.items():
+        if user_id in unwanted_keys:
+            continue
+        parsed_id = int(user_id)
+        if parsed_id not in allowed and allow == "1":
+            user.allow(user_id, forum_id)
+        elif parsed_id in allowed and allow == "0":
+            user.disallow(user_id, forum_id)
+    return redirect("/")
 
 def error(message, destination):
     flash(message)

@@ -21,7 +21,7 @@ Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä 
 - ✅ Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 - ✅ Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 - ✅ Ylläpitäjä voi luoda salaisen alueen jolle vain ylläpitäjillä on pääsy
-- ❌ Ylläpitäjä voi määrittää, keillä käyttäjistä on oikeus päästä tietyille alueille
+- ✅ Ylläpitäjä voi määrittää, keillä käyttäjistä on oikeus päästä tietyille alueille
 
 ### Tiedetyt ongelmat
 - Langat ja viestit eivät kerro onko niitä muokattu

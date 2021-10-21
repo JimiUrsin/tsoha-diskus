@@ -41,18 +41,12 @@ def get_all(thread_id):
     result = db.session.execute(sql, {"id":thread_id})
     return result.fetchall()
 
-def search(query, admin):
-    if admin:
-        sql = f"SELECT messages.id, messages.thread_id, messages.content, messages.sent_at AT TIME ZONE 'Etc/UTC' AT TIME ZONE 'Europe/Helsinki' AS sent_at, users.username, threads.title FROM messages " \
-        "LEFT JOIN threads ON threads.id=messages.thread_id " \
-        "LEFT JOIN users ON users.id=messages.user_id " \
-        "WHERE messages.content ILIKE :query;"
-    else:
-        sql = f"SELECT messages.id, messages.thread_id, messages.content, messages.sent_at AT TIME ZONE 'Etc/UTC' AT TIME ZONE 'Europe/Helsinki' AS sent_at, users.username, threads.title FROM messages " \
-        "LEFT JOIN threads ON threads.id=messages.thread_id " \
-        "LEFT JOIN forums ON threads.forum_id=forums.id " \
-        "LEFT JOIN users ON users.id=messages.user_id " \
-        "WHERE messages.content ILIKE :query AND forums.hide=FALSE;"
+def search(query):
+    sql = f"SELECT messages.id, messages.thread_id, messages.content, messages.sent_at AT TIME ZONE 'Etc/UTC' AT TIME ZONE 'Europe/Helsinki' AS sent_at, users.username, threads.title, threads.forum_id, forums.hide FROM messages " \
+    "LEFT JOIN threads ON threads.id=messages.thread_id " \
+    "LEFT JOIN forums ON threads.forum_id=forums.id " \
+    "LEFT JOIN users ON users.id=messages.user_id " \
+    "WHERE messages.content ILIKE :query;"
 
     result = db.session.execute(sql, {"query":f"%{query}%"})
     return result.fetchall()
