@@ -4,14 +4,14 @@
     <input type="submit" value="Etsi viestejä">
 </form>
 {% if searched %}
-    Hakusanalla "{{query}}" löytyi {{messages|length}} viesti{% if messages|length != 1 %}ä{% endif %}
+    Hakusana: "{{query}}"
 {% endif %}
 <hr>
 {% for message in get_flashed_messages() %}
     <strong style="color:red">{{message}}</strong>
 {% endfor %}
 {% for message in messages %}
-    {% if not message.hide or session.admin or message.forum_id in session.allowed %}
+    {% if not message.hide or session.admin or session.allowed and message.forum_id in session.allowed %}
         <strong>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</strong> <br>
         {{message.content}} <br>
         <a href="/thread/{{message.thread_id}}">Siirry lankaan "{{message.title}}" →</a>
