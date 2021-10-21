@@ -21,8 +21,8 @@ def render_forum(id):
     if exists:
         threads = thread.get_all(id)
         found_forum = forum.get(id)
-        if found_forum[1] and not session.get("admin") and found_forum[0] not in session.get("allowed"):
-            # Forum was hidden and the current user is not an admin
+        if found_forum[1] and not session.get("admin") and found_forum[0] not in session.get("allowed", []):
+            # Forum was hidden and the current user is not an admin and not allowed
             return render_template("norights.html")
         return render_template("forum.html", forum=found_forum, threads=threads, edit=edit)
     else:
@@ -174,7 +174,7 @@ def render_thread(id):
     
     parent_id = thread.parent(id)
     parent_forum = forum.get(parent_id)
-    if parent_forum[1] and not session.get("admin") and parent_forum[0] not in session.get("allowed"):
+    if parent_forum[1] and not session.get("admin") and parent_forum[0] not in session.get("allowed", []):
         return render_template("norights.html")
 
     messages = message.get_all(id)
