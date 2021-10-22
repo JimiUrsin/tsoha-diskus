@@ -255,6 +255,8 @@ def edit_message():
 
 @app.route("/manage-rights", methods=["GET"])
 def get_rights():
+    if not session.get("admin"):
+        return redirect("/")
     users = user.get_all()
     forum_id = request.args.get("id")
     found_forum = forum.get(forum_id)
@@ -266,6 +268,10 @@ def get_rights():
 
 @app.route("/manage-rights", methods=["POST"])
 def set_rights():
+    if session["csrf_token"] != request.form.get("csrf_token"):
+        abort(403)
+    if not session.get("admin"):
+        return redirect("/")
     forum_id = request.form.get("forum_id")
     allowed = forum.get_allowed(forum_id)
     unwanted_keys = ["csrf_token", "forum_id"]
