@@ -35,3 +35,6 @@ a {
     margin-top: 1em;
     padding: 1em;
 }
+th, td {
+    padding: 0 1em 0 0;
+}
