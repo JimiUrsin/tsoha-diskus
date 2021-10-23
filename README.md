@@ -4,8 +4,8 @@ Diskus on keskustelusovellus, jossa on useita alueita eri aiheen keskustelua var
 ### Sovelluksen testaus
 Sovellusta pääsee kokeilemaan siirtymällä Herokuun https://tsoha-diskus.herokuapp.com/
 
-### Projektin nykytilanne (välipalautus 3)
-Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä on enää ketjujen ja viestien muokkauksen lisääminen ja tietenkin jo lisättyjen ominaisuuksien hiominen. Sovelluksen visuaalinen puoli kaipaa toki myös parannusta. Koodin uudelleenjärjestäminen viime välipalautuksessa mainittuun muotoon olisi myös tarkoitus tehdä ennen lopullista palautusta.
+### Projektin nykytilanne (lopullinen palautus)
+Sovellus on nyt valmis, kaikki ominaisuudet on lisätty ja pyritty hiomaan mahdollisimman toimivaksi. Tämän ja viime palautuksen välillä projektin ulkoasu on myös tehty siedettäväksi.
 
 ### Sovelluksen ominaisuuksia
 ✅ = lisätty, ❌ = ei vielä lisätty
@@ -21,7 +21,7 @@ Kuten sovelluksen ominaisuuksista näkyy, sovellus on miltei valmis. Jäljellä 
 - ✅ Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 - ✅ Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 - ✅ Ylläpitäjä voi luoda salaisen alueen jolle vain ylläpitäjillä on pääsy
-- ✅ Ylläpitäjä voi määrittää, keillä käyttäjistä on oikeus päästä tietyille alueille
+- ✅ Ylläpitäjä voi määrittää, keillä normaaleista käyttäjistä on oikeus päästä salaisille alueille
 
 ### Tiedetyt ongelmat
 - Langat ja viestit eivät kerro onko niitä muokattu
