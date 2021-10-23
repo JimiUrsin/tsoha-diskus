@@ -55,8 +55,8 @@
 {% if session.username or get_flashed_messages() %}
     <div id="bottom">
         {% if session.username %}
-            <form action="/createmessage" method="POST">
-                <input type="text" name="content">
+            <textarea name="content" form="newmessage" rows=5 cols=40 maxlength=500></textarea>
+            <form action="/createmessage" method="POST" id="newmessage">
                 <input type="submit" value="Lähetä viesti">
                 <input type="hidden" name="thread_id" value="{{thread.id}}">    
                 <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
