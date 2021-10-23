@@ -2,7 +2,7 @@ body {
     background:#D5D6EA;
     margin: auto;
     max-width: 45em;
-    font-family: 'Roboto' 'Segoe UI', sans-serif;
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
     word-wrap: break-word;
 }
 h4 {
