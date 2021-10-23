@@ -268,7 +268,7 @@ def get_rights():
 
 @app.route("/manage-rights", methods=["POST"])
 def set_rights():
-    if session["csrf_token"] != request.form.get("csrf_token"):
+    if session.get("csrf_token") != request.form.get("csrf_token"):
         abort(403)
     if not session.get("admin"):
         return redirect("/")

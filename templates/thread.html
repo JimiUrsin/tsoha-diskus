@@ -1,22 +1,31 @@
-<title>Diskus - {{thread.title}}</title>
+{% extends "layout.html" %}
+{% block title %} - {{thread.title}}{% endblock %}
 
-<a href="/forums/{{thread.forum_id}}"><strong>← Takaisin aiheeseen</strong></a><br>
-<h1>{{thread.title}}
+{% block content %}
+<div id="top-bar">
+<p style="float:right; padding-top:.5em;">
+<a href="/forums/{{thread.forum_id}}">← Takaisin aiheeseen</a> <br>
+</p>
+<h1>{{thread.title}}</h1>
+</div>
+
+
+<div id="middle">
 {% if session.username %}
-    <form action="{{thread.id}}" method="GET" style="right:1em; position:absolute">
-        {% if not edit %}<input type="hidden" name="edit" value=1>{% endif %}
-        <input type="submit" value="{% if edit %}Lopeta muokkaus{% else %}Muokkaa{% endif%}">
-    </form>
+    <p style="float:right; padding-top:.5em;">
+        {% if edit %}
+            <a href="{{thread.id}}">Lopeta muokkaaminen</a>
+        {% else %}
+            <a href="{{thread.id}}?edit=1">Muokkaa/poista viestejä</a>
+        {% endif %}
+    </p>
 {% endif %}
-</h1>
-
-
-
+<h3>Viestit langassa {{thread.title}}</h3>
 <hr>
 {% for message in messages %}
-    <strong>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</strong> <br>
     <div id="text_{{message.id}}" style="display:block"> 
     <p>{{message.content}}</p>
+    <strong>Lähettänyt: {{message.username}} {{message.sent_at.strftime("%d.%m.%Y klo %H:%M:%S")}}</strong>
     {% if edit and (session.username == message.username or session.admin) %}
         <form action="/deletemessage" method="POST">
             <input type="submit" value="Poista viesti">
@@ -40,19 +49,24 @@
     </div>
 
     <hr>
-{% endfor %}
-<br>
-{% if session.username %}
-<form action="/createmessage" method="POST">
-    <input type="text" name="content">
-    <input type="submit" value="Lähetä viesti">
-    <input type="hidden" name="thread_id" value="{{thread.id}}">    
-    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
-</form>
+    {% endfor %}
+</div>
+
+{% if session.username or get_flashed_messages() %}
+    <div id="bottom">
+        {% if session.username %}
+            <form action="/createmessage" method="POST">
+                <input type="text" name="content">
+                <input type="submit" value="Lähetä viesti">
+                <input type="hidden" name="thread_id" value="{{thread.id}}">    
+                <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+            </form>
+        {% endif %}
+        {% for message in get_flashed_messages() %}
+            <strong style="color:red">{{message}}</strong>
+        {% endfor %}
+    </div>
 {% endif %}
-{% for message in get_flashed_messages() %}
-<strong style="color:red">{{message}}</strong>
-{% endfor %}
 
 <script type="text/javascript">
     function edit(message_id) {
@@ -64,3 +78,4 @@
         document.getElementById("text_" + message_id).style.display="block";
     }
 </script>
+{% endblock %}
