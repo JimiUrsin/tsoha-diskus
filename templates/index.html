@@ -42,9 +42,9 @@
                         <input type="hidden" name="forum_id" value="{{forum.id}}">
                         <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
                     </form>
-                {% endif %}
+                {% endif %}                
+                {% if not loop.last %}<hr>{% endif %}
             {% endif %}
-            {% if not loop.last %}<hr>{% endif %}
         {% endfor %}
     </div>
 
