@@ -3,7 +3,7 @@
 
 {% block content %}
 <div id="top-bar">
-<p style="float:right; padding-top:.5em;">
+<p style="float:right; padding-top:1em;">
 <a href="/forums/{{thread.forum_id}}">← Takaisin aiheeseen</a> <br>
 </p>
 <h1>{{thread.title}}</h1>
@@ -12,7 +12,7 @@
 
 <div id="middle">
 {% if session.username %}
-    <p style="float:right; padding-top:.5em;">
+    <p style="float:right; padding-top:0.5em;">
         {% if edit %}
             <a href="{{thread.id}}">Lopeta muokkaaminen</a>
         {% else %}
