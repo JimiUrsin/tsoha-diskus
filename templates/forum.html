@@ -13,14 +13,14 @@
     <div id="middle">     
         {% if session.username %}
             <p style="float:right; padding-top: 0.5em;">
-            {% if edit %}
-                <a href="{{forum.id}}">Lopeta muokkaaminen</a>
-            {% else %}
-                <a href="{{forum.id}}?edit=1">Muokkaa/poista lankoja</a>
-            {% endif %}
+                {% if edit %}
+                    <a href="{{forum.id}}">Lopeta muokkaaminen</a>
+                {% else %}
+                    <a href="{{forum.id}}?edit=1">Muokkaa/poista lankoja</a>
+                {% endif %}
             </p>
         {% endif %}    
-        <h3>Langat aiheessa {{forum.topic}}</h3>  
+        <h3>Langat aiheessa<wbr>{{forum.topic}}</h3>  
     <hr>
         {% for thread in threads %}
             <div id="title_{{thread.id}}" style="display:block">        

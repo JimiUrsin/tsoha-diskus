@@ -3,6 +3,7 @@ body {
     margin: auto;
     max-width: 45em;
     font-family: 'Roboto' 'Segoe UI', sans-serif;
+    word-wrap: break-word;
 }
 h4 {
     margin:0;
