@@ -55,7 +55,7 @@ def delete_thread():
     if thread_id:
         thread.delete(forum_id, thread_id, session.get("admin"), session.get("id"))
 
-    return redirect(f"/forums/{forum_id}")
+    return redirect(f"/forums/{forum_id}?edit=1")
 
 
 @app.route("/createforum", methods=["POST"])
@@ -205,7 +205,7 @@ def delete_message():
     if message_id:
         message.delete(message_id, session.get("admin"), session.get("id"), thread_id)
 
-    return redirect(f"/thread/{thread_id}")
+    return redirect(f"/thread/{thread_id}?edit=1")
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
@@ -234,7 +234,7 @@ def edit_thread():
             return error("Aihe ei saa olla yli 50 merkkiä pitkä", f"/forums/{forum_id}")
         thread.edit(thread_id, title, session.get("admin", False), session.get("id", 0))
     
-    return redirect(f"/forums/{forum_id}")
+    return redirect(f"/forums/{forum_id}?edit=1")
 
 @app.route("/editmessage", methods=["POST"])
 def edit_message():
@@ -251,7 +251,7 @@ def edit_message():
             return error("Viesti ei saa olla yli 500 merkkiä pitkä", f"/thread/{thread_id}")
         message.edit(message_id, content, session.get("admin", False), session.get("id", 0))     
 
-    return redirect(f"/thread/{thread_id}")
+    return redirect(f"/thread/{thread_id}?edit=1")
 
 @app.route("/manage-rights", methods=["GET"])
 def get_rights():
