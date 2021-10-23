@@ -6,7 +6,7 @@
 <p style="float:right; padding-top:1em;">
 <a href="/forums/{{thread.forum_id}}">← Takaisin aiheeseen</a> <br>
 </p>
-<h1>{{thread.title}}</h1>
+<h1>{{forum.topic}}</h1>
 </div>
 
 
@@ -20,8 +20,11 @@
         {% endif %}
     </p>
 {% endif %}
-<h3>Viestit langassa <wbr>{{thread.title}}</h3>
+<h3>{{thread.title}}</h3>
 <hr>
+{% if not messages %}
+    <p>Viestejä ei ole.</p>
+{% endif %}
 {% for message in messages %}
     <div id="text_{{message.id}}" style="display:block"> 
     <p>{{message.content}}</p>

@@ -178,7 +178,7 @@ def render_thread(id):
         return render_template("norights.html")
 
     messages = message.get_all(id)
-    return render_template("thread.html", messages=messages, thread=found_thread, edit=edit)
+    return render_template("thread.html", messages=messages, thread=found_thread, edit=edit, forum=parent_forum)
 
 @app.route("/createmessage", methods=["POST"])
 def create_message():

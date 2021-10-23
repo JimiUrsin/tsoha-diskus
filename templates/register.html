@@ -2,7 +2,7 @@
 {% block title %} - rekisteröidy {% endblock %}
 
 {% block content %}    
-    <p  style="margin-top:1em">
+    <p style="margin-top:1em">
         <a href="/"><strong>← Etusivulle</strong></a>
     </p>
 
@@ -21,6 +21,6 @@
     </div>
 
     {% for message in get_flashed_messages() %}
-    <strong style="color:red">{{message}}</strong>
+        <strong style="color:red">{{message}}</strong>
     {% endfor %}
 {% endblock %}

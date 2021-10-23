@@ -20,8 +20,11 @@
                 {% endif %}
             </p>
         {% endif %}    
-        <h3>Langat aiheessa <wbr>{{forum.topic}}</h3>  
-    <hr>
+        <h3>Langat aiheesta <wbr>{{forum.topic}}</h3>  
+        <hr>
+        {% if not threads %}
+            Lankoja ei ole.
+        {% endif %}
         {% for thread in threads %}
             <div id="title_{{thread.id}}" style="display:block">        
                 <strong><a href="/thread/{{thread.id}}">{{thread.title}}</a></strong>
