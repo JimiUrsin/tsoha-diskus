@@ -48,8 +48,9 @@
         </form>
     </div>
 
-    <hr>
-    {% endfor %}
+    {% if not loop.last %}<hr>{% endif %}
+{% endfor %}
+
 </div>
 
 {% if session.username or get_flashed_messages() %}

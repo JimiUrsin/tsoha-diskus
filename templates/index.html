@@ -22,9 +22,9 @@
         <p><a href="/search" style="float:right; padding-right:0.5em">Hae viestejä</a></p>
 
         <h3>Aiheet</h3>
+        <hr>
         {% for forum in forums %}
             {% if not forum.hide or session.admin or (session.allowed and forum.id in session.allowed) %}
-                <hr>
                 <h4><a href="/forums/{{forum.id}}">{{forum.topic}}</a> {% if forum.hide %} (Piilotettu aihe) {% endif %} <br></h4>
 
                 Lankoja aiheessa: {{forum.threadcount}}<br>
@@ -44,6 +44,7 @@
                     </form>
                 {% endif %}
             {% endif %}
+            {% if not loop.last %}<hr>{% endif %}
         {% endfor %}
     </div>
 

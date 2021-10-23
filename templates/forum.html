@@ -57,7 +57,7 @@
                     <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
                 </form>
             {% endif %}
-            <hr>
+            {% if not loop.last %}<hr>{% endif %}
         {% endfor %}
     </div>
     <br>
